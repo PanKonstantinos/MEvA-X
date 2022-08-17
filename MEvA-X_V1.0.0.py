@@ -1835,34 +1835,6 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 	picklefy_variables(roc_auc_list,'roc_auc_list',output_folder)
 	################################################################################################
 
-	try:
-		import requests
-		msg = f'Program Ended!\nIn {end_time/60:.4} minutes'
-		sender_url = f'https://api.telegram.org/bot1895275303:AAEw4KdqY5WhB0m-Bt0lXTUeXRBWlZMVm74/sendMessage?chat_id=-560531326&text={msg}'
-		requests.get(sender_url)
-	except:
-		print('Something went wrong with the request for the notification. Check the spelling of the Token!')
-
-# 	import shelve
-
-# 	filename = f'{output_folder}shelve.out'
-# 	my_shelf = shelve.open(filename,'n') # 'n' for new
-
-# 	for key in dir():
-# 	    try:
-# 	        my_shelf[key] = globals()[key]
-# 	    except TypeError:
-# 	        #
-# 	        # __builtins__, my_shelf, and imported modules can not be shelved.
-# 	        #
-# 	        print('ERROR shelving: {0}'.format(key))
-# 	my_shelf.close()
-	### To restore the variables ####
-# 	my_shelf = shelve.open(filename)
-# 	for key in my_shelf:
-# 	    globals()[key]=my_shelf[key]
-# 	my_shelf.close()
-
 def picklefy_variables(var,var_name,output_folder):
 	try:
 		pickle.dump(var, open(f'{output_folder}Variables/{var_name}.pkl', "wb"))
