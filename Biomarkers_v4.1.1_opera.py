@@ -1,7 +1,4 @@
-"""
-This is a script to test many different things in the program
-Date of creation: 08/10/2020
-"""
+
 import random
 import math
 import copy
