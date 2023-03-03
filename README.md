@@ -46,13 +46,15 @@ Dependencies:
   </tr>
   <tr>
     <td>requests</td>
-    <td>>2.25</td>
+    <td>2.28.1</td>
     <td>https://pypi.org/project/requests/</td>
   </tr>
 </table> 
 
 Example for calling MEvA-X from terminal:
-```python MEvA-X_V1.0.0.py```
+```
+python MEvA-X_V1.0.0.py
+```
 
 (Comming soon) Example for calling MEvA-X_V2 from terminal:
 ```
