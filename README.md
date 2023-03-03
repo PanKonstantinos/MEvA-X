@@ -41,7 +41,7 @@ Dependencies:
   </tr>
   <tr>
     <td>knnimpute</td>
-    <td></td>
+    <td>0.1.0</td>
     <td>https://github.com/iskandr/knnimpute</td>
   </tr>
   <tr>
