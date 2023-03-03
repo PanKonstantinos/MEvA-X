@@ -11,17 +11,27 @@ Dependencies:
   </tr>
   <tr>
     <td>Pandas</td>
-    <td>>1.3</td>
+    <td>>1.3.0</td>
     <td>https://pypi.org/project/pandas/</td>
   </tr>
   <tr>
     <td>XGBoost</td>
-    <td>>1.5</td>
+    <td>1.7.3</td>
     <td>https://pypi.org/project/xgboost/</td>
   </tr>
   <tr>
+    <td>Numpy</td>
+    <td>1.21.5</td>
+    <td>https://numpy.org/</td>
+  </tr>
+  <tr>
+    <td>Sklearn</td>
+    <td>0.24.2</td>
+    <td>https://scikit-learn.org/stable/</td>
+  </tr>
+  <tr>
     <td>mifs</td>
-    <td></td>
+    <td>0.0.1.dev0</td>
     <td>https://github.com/danielhomola/mifs</td>
   </tr>
   <tr>
