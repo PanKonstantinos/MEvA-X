@@ -1531,6 +1531,30 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 								generations, two_points_crossover_probability=0.45, arithmetic_crossover_probability=0.45,
 								mutation_probability=0.05, goal_significances=None, num_of_folds=10, output_folder=None,
 								eval_names=None, missing_values_flag=True, normalize_flag=False):
+	'''
+	Main function of the MEvA-X tool that calls the other modules. Preprocessing steps and results are parts of this function
+	Parameters:
+	-----------
+		dataset [ndarray]: a 2D array of the datapoints in the format of Rows:Features and Columns:Samples
+		feature_names [ndarray]: a 1D array of the names of the features (genes) in the dataset
+		sample_names [ndarray]: a 1D array of the names of the Samples in the dataset
+		labels [ndarray]: a 1D array of the Labels for each Samples in the dataset
+		min_values [ndarray]: a 1D array of the minimum allowed values for the parameters of the individuals
+		max_values [ndarray]: a 1D array of the minimum allowed values for the parameters of the individuals
+		population [int]: The number of individual solutions in the population
+		generations [int]: The number of iterations to run the genetic algorithm for
+		two_points_crossover_probability [float]: probability of the offsprings to be produced by the exchange of pieces from the parental individuals
+		arithmetic_crossover_probability [float]: probability of an arithmetic crossover of the parental individuals to produce the offsprings
+		mutation_probability [float]: probability of an offspring to mutate
+		goal_significances [ndarray]: array of weights for the objectives
+		num_of_folds [int]: Number of folds for cross validation
+		output_folder [str]: path to the directory where to save the results
+		eval_names [ndarray]: 1D array with the names of the evaluation metrics
+		missing_values_flag [bool]: If True, try to impute missing values
+		normalize_flag [bool]: If True, normalize the data
+	Return:
+	-----------
+	'''
 	print(f"Number of parameters = {parameters}")
 	original_dataset = dataset.copy() # Keep a acopy of the data just in case!
 	unique_labels = list(set(labels)) # or use np.unique(labels) <-- <numpy.ndarray>
