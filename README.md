@@ -41,7 +41,7 @@ Dependencies:
   </tr>
 </table> 
 
-Example for calling MEvA-X_V2 from terminal:
+Example for calling MEvA-X from terminal:
 ```python MEvA-X_V1.0.0.py```
 
 (Comming soon) Example for calling MEvA-X_V2 from terminal:
