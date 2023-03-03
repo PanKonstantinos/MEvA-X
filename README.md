@@ -3,12 +3,14 @@ An open source biomarker discovery tool based on a multi-objective Evolutionary 
 Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performance of the XGBoost Classifiers improved their overall performance and/or the simplicity of the final models. 
 
 Dependencies:
-pandas
-xgboost
-mifs (https://github.com/danielhomola/mifs)
-pickle
-knnimpute (https://github.com/iskandr/knnimpute)
-requests
+| Librarie's name  | version | Comment|
+| ------------- | ------------- |
+| Pandas  | Content Cell  ||
+| XGBoost  | Content Cell  ||
+| mifs  | Content Cell  |<a>https://github.com/danielhomola/mifs</a>|
+| pickle  | Content Cell  ||
+| knnimpute  | |<a>https://github.com/iskandr/knnimpute</a>|
+| requests  | ||
 
 Example for calling MEvA-X_V2 from terminal:
 python MEvA-X.py
