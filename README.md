@@ -75,7 +75,7 @@ python MEvA-X.py -K 10 -P 50 -G 200 --dataset my_data.txt --labels my_labels.tsv
 ```
 see below the details for the inputs:
 
-Parameters of the algorithm:</h3>
+<h3>Parameters of the algorithm:</h3>
 <table>
   <tr>
     <th>Parameter name</th>
