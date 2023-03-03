@@ -56,14 +56,18 @@ class Individual():
 		self.feature_names = feature_names
 
 	def evaluate(self):
-		#np.random.seed()
-		#print(f'Individual: {self.process_i}')
-
+		'''
+		Evaluates the solutions of the population one by one (in parallel processes) by creating XGBoost models and evaluating their performances
+		
+		Input: an Individual class object
+		Arduments: None
+		Output: 
+			- An array of the evaluation metrics and the standard deviation of the K-fold cross validation
+			- An array of the FPR and TPR to build the AUC ROC
+		'''
 		logging.info(f'\n\n> Training models for individual # {self.process_i} ################################')
 		evaluation_values = []
 		l = self.individual.shape[0] - self.parameters
-		#selected = np.ones([1,l],dtype='int') # 10/07/2020
-
 
 		logging.info(f'Selected_features == 1 {str(np.count_nonzero(self.individual[self.parameters:]==1))} features out of: {l} ')
 		logging.info(f'Selected_features > 0.5 {str(np.count_nonzero(self.individual[self.parameters:]>0.5))} features out of {l} ')
@@ -74,7 +78,6 @@ class Individual():
 		mask = mask[self.parameters:].round()
 		mask = mask.astype(bool)#np.array(mask,dtype=bool)
 		if mask.any():
-			#xgb_params = {'objective':'binary:logistic'}
 			num_rounds = 1000
 			xgb_params = {'eta':self.individual[4], 'max_depth':int(self.individual[5]),
 						'gamma':self.individual[6], 'lambda':self.individual[7],
@@ -179,9 +182,9 @@ class Individual():
 			if self.multiclass:
 				goal11 = [mean_array[9],stdv_array[9]]
 
-			'''Metric not used
-			goal12 = iba/float(self.num_of_folds)
-			'''
+			## Metric not used
+			#goal12 = iba/float(self.num_of_folds)
+			
 			N_trees = int(np.median(N_trees))
 		else:
 			N_trees = 0
@@ -191,10 +194,9 @@ class Individual():
 			goal2 = goal3 = goal4 = goal5 = goal6 = goal7 = goal8 = goal9 = goal10 = [0,0]
 			if self.multiclass:
 				goal11 = [0,0]
-			'''Metric not used
-			goal12 = 0
-			'''
-
+			## Metric not used
+			#goal12 = 0
+			
 		evaluation_values.append(goal2[0]) # Goal 2 is the average accuracy
 		evaluation_values.append(goal3[0])	# Goal 3 is (#of_samples-#of_avg_svs)/#of_samples --> [0,1]
 		evaluation_values.append(goal4[0]) # Goal 4 is the average weighted geometric mean
@@ -207,9 +209,9 @@ class Individual():
 		if self.multiclass:
 			evaluation_values.append(goal11[0]) # Goal 11 is the average manhattan distance
 		evaluation_values.append(N_trees)
-		'''Metric not used
-		evaluation_values.append(goal12) # Goal 12 is the index of Balanced Accuracy [IBA]
-		'''
+		## Metric not used
+		#evaluation_values.append(goal12) # Goal 12 is the index of Balanced Accuracy [IBA]
+		
 
 		if self.process_i==0:
 			print(f'Acc: {goal2}, Model_compl[splits]: {goal3}, wGM: {goal4}')
@@ -220,6 +222,13 @@ class Individual():
 		return np.array(evaluation_values, dtype=float), list(zip(mean_array,stdv_array)), fpr_tpr_array # returns to evaluate_individuals
 
 	def training_best(self,N_trees):
+		'''
+		Trains one final model based on the parameters of the individual in the first place ot the array (The one with the highest overall score)
+		Attributes: 
+			- Inherit attributes of the Individual class
+			- N_trees (int) : Number of trees to use based on the optimization of the parameters for this solution
+		Output: <XGBCalssifier> the trained model
+		'''
 		logging.info(f'\n\n> Training models for individual # {self.process_i} ################################')
 		evaluation_values = []
 		l = self.individual.shape[0] - self.parameters
@@ -240,7 +249,6 @@ class Individual():
 				'alpha':self.individual[8], 'min_child_weight':self.individual[9],
 				'scale_pos_weight':self.individual[10],
 				'nthread':mp.cpu_count(),'objective':'binary:logistic', 'eval_metric':['auc']}
-				#'colsample_bytree':self.individual[11],'subsample':self.individual[12],\
 		if self.multiclass==True:
 			xgb_params['objective']='multi:softmax'
 			xgb_params['eval_metric']=['mlogloss']
@@ -258,7 +266,6 @@ class Individual():
 
 	def prepare_models_majority_voting(self, N_trees):
 		'''
-
 		Parameters
 		----------
 		N_trees : int
@@ -268,7 +275,6 @@ class Individual():
 		-------
 		model : xgb.Booster
 			Returns an xgboost Booster ready to train (but not trained yet) with the parameters of the individual of the First Pareto Frontier.
-
 		'''
 		logging.info(f'\n\n> Training models for individual # {self.process_i} ################################')
 		evaluation_values = []
