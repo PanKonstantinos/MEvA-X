@@ -1759,7 +1759,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 
 
 	end_time = time.time()-prog_time
-	msg = f'Program ended in : {end_time:.4} seconds or {end_time/60:.4} minutes\n'
+	msg = f'Program ended in : {end_time/60:.4} minutes\n'
 	print(msg)
 	with open(output_folder+'timing.txt','a') as time_file:
 		time_file.write(msg)
@@ -1774,13 +1774,6 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 	picklefy_variables(roc_auc_list,'roc_auc_list',output_folder)
 	################################################################################################
 
-	try:
-		import requests
-		msg = f'Program Ended!\nIn {end_time/60:.4} minutes'
-		sender_url = f'https://api.telegram.org/bot1895275303:AAEw4KdqY5WhB0m-Bt0lXTUeXRBWlZMVm74/sendMessage?chat_id=-560531326&text={msg}'
-		requests.get(sender_url)
-	except:
-		print('Something went wrong with the request for the notification. Check the spelling of the Token!')
 
 
 def picklefy_variables(var,var_name,output_folder):
