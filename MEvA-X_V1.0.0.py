@@ -44,8 +44,6 @@ class Individual():
 		self.individual = np.array(individual)
 		self.process_i = process_i
 		self.dataset = np.array(dataset)
-		#self.dataset_normalized = np.array(dataset_normalized)
-		#self.dataset_with_missing_values = dataset_with_missing_values
 		self.labels = labels
 		self.num_of_folds = num_of_folds
 		self.parameters = parameters #Global parameter
@@ -950,12 +948,11 @@ def mutation(selected_individuals, population, min_values, max_values, mutation_
 				# Correcting values that are out of boundaries
 				selected_individuals[indiv,param] = limit(selected_individuals[indiv,param], min_values[param], max_values[param]-1e-05) #-1E-5 in order to avoid rounding to max value when we use int()
 
-		#Mutation on Feature-genes Only
+		## Mutation on Feature-genes Only
 		off_genes = selected_individuals[indiv,parameters:]<=0.5
-		#off_genes = selected_individuals[indiv,parameters:]==0
 		on_genes = ~off_genes
 
-		##Turn Genes ON
+		## Turn Genes ON
 		added_features_flag = np.random.choice([True,False])#randint(0,2)
 		if added_features_flag:
 			#Add a new feature in this chromosome
@@ -965,7 +962,7 @@ def mutation(selected_individuals, population, min_values, max_values, mutation_
 										size=num_of_added_features, replace=False)
 			selected_individuals[indiv,parameters+positions] = 1
 
-		##Turn Genes OFF
+		## Turn Genes OFF
 		elif any(on_genes):#.sum()>1:
 			if (on_genes).sum()<6:
 				num_of_removed_features = limit(np.random.randint(0,on_genes.sum()), 1, on_genes.sum())
@@ -984,7 +981,18 @@ def mutation(selected_individuals, population, min_values, max_values, mutation_
 
 def filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes):
 	'''
-	Applies the Feature selection method (or not) based on the parameter genes each individual has
+	Applies the Feature selection method (if applicable) based on the parameter genes each individual has
+	Parameters:
+	-----------
+		individuals [array]: The array of individual solutions with all the parameters for each one of them
+		JMI_genes [array]: The array of positions of genes selected by the JMI method for filtering
+		Wilcoxon_genes [array]: The array of positions of genes selected by the mRMR method for filtering
+		mRMR_genes [array]: The array of positions of genes selected by the JMI method for filtering
+		SelKBest_genes [array]: The array of positions of genes selected by the SelKBest method for filtering
+	Return:
+		filter_mask [array]: A boolean array of index for genes to turn ON/OFF
+	-----------
+	
 	'''
 	filter_mask = individuals.copy()
 	for indiv in range(individuals.shape[0]):
@@ -1050,6 +1058,21 @@ def filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest
 	return filter_mask.astype(bool)
 
 def similarity_function(fronts, evaluation_values, individuals, sigma_share, max_values, min_values):
+	'''
+	Calculates and gegredes the solutions based on their similarity
+	Parameters:
+	-----------
+		fronts [array]: Indicated the Pareto frontier for every individual solution
+		evaluation_values [array]: The array of the evaluation values for each solution
+		individuals [array]: The array of individual solutions with all the parameters for each one of them
+		sigma_share [float]: The radius of the neighborhood in which solutions are considered similar
+		max_values [array]: maximum value allowed for every position in the individual[i] array
+		min_values [array]: minimum value allowed for every position in the individual[i] array
+	Return:
+		filter_mask [array]: A boolean array of index for genes to turn ON/OFF
+	-----------
+	
+	'''
 	evaluation_values_f = evaluation_values.copy()
 	# evaluation_values_f_test = evaluation_values.copy()
 	ms = np.empty(np.unique(fronts).shape[0])
