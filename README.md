@@ -80,7 +80,7 @@ Parameters of the algorithm:
   </tr>
   <tr>
     <td>Population</td>
-    <td>>Number of individuals for the evolutionary algorithm</td>
+    <td>Number of individuals for the evolutionary algorithm</td>
     <td>50</td>
   </tr>
   <tr>
