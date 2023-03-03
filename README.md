@@ -73,9 +73,9 @@ python MEvA-X_V1.0.0.py
 ```
 python MEvA-X.py -K 10 -P 50 -G 200 --dataset my_data.txt --labels my_labels.tsv -FS precalculated_features.csv --output_dir current_folder -cop 0.9 -acp 0 -mp 0.1 -goal_sig_lst 0.8 2 0.8 1 1 0.7 0.7 1 2 0.5 2
 ```
+see below the details for the inputs:
 
-
-Parameters of the algorithm:
+Parameters of the algorithm:</h3>
 <table>
   <tr>
     <th>Parameter name</th>
