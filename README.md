@@ -44,9 +44,9 @@ Dependencies:
     <td>https://github.com/danielhomola/mifs</td>
   </tr>
   <tr>
-    <td>pickle5</td>
+    <td>pickle</td>
     <td></td>
-    <td>https://pypi.org/project/pickle5/</td>
+    <td>https://pypi.org/project/pickle/</td>
   </tr>
   <tr>
     <td>knnimpute</td>
