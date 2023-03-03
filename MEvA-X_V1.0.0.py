@@ -20,14 +20,9 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.metrics.pairwise import manhattan_distances
 from scipy.stats import ranksums
 from sklearn.ensemble import VotingClassifier
-#import scipyranksums
-#from collections import defaultdict
-#from bisect import bisect_left
 import logging
 import os
 import mifs
-
-#from imblearn.metrics import geometric_mean_score, make_index_balanced_accuracy
 
 logging.basicConfig(filename='LogFile.log',level=logging.DEBUG, filemode='w')
 
@@ -77,8 +72,6 @@ class Individual():
 
 		# No need to keep the parameters in the mask variable. We use it only for the features we want to select
 		mask = mask[self.parameters:].round()
-		#mask = self.individual[self.parameters:]>0.5 # Select Only the features with "selected score" > 0.5
-
 		mask = mask.astype(bool)#np.array(mask,dtype=bool)
 		if mask.any():
 			#xgb_params = {'objective':'binary:logistic'}
@@ -95,8 +88,6 @@ class Individual():
 				xgb_params['num_class']=np.unique(self.labels).shape[0]
 
 
-			#inputs = self.dataset[mask,:]
-			#inputs = self.dataset_normalized[mask,:]
 			inputs = self.dataset[mask,:] # Apply the mask on the dataset to keep ONLY the "approved" features as inputs
 			inputs = inputs.T # Transpose the input to be Samples X Features
 			outputs = self.labels.copy()
@@ -112,19 +103,13 @@ class Individual():
 				training_outputs, testing_outputs = outputs[train_index], outputs[test_index]
 				dtrain = xgb.DMatrix(training_inputs, label = training_outputs)
 				deval = xgb.DMatrix(testing_inputs, label = testing_outputs)
-				#logging.info(f'\nIndiv{self.process_i}, Test_Index: {test_index}\n')
 				metrics_array.append([])
-				# if i==0:
-					# print(f'Testing indices: {test_index}, classes: {outputs[test_index]}')
-				#watchlist = [(dtrain,'train'),(deval,'eval')]
-				#watchlist = [(dtrain,'train')]
+
 				watchlist = [(deval,'eval')]
-				#evals_result = {}
 
 				verbose_eval = False
 				booster = xgb.train(params = xgb_params, dtrain = dtrain, num_boost_round = num_rounds,
 									evals = watchlist, early_stopping_rounds = 100,verbose_eval = verbose_eval)
-				#print(evals_result)
 
                 ############################################
 
@@ -137,20 +122,15 @@ class Individual():
 					n_nodes = len(tree_string.split('\n')) - 1
 					n_leaves = tree_string.count('leaf')
 					total_splits += n_nodes - n_leaves
-				#print(total_splits)
-				#total_cv_splits += total_splits
-				#avg_splits = total_splits/booster.best_ntree_limit
 
 
 				N_trees.append(booster.best_ntree_limit)
 				predictions = booster.predict(deval, iteration_range = (0,booster.best_ntree_limit))+1e-08
-				#predictions = booster.predict(deval, ntree_limit = booster.best_ntree_limit) #ntree_limit is deprecated, use iteration_range instead
 
 				############################################
 
                 ######### Calculating AUC,FPR,TPR  #########
 
-				#preds = booster.predict_proba(testing_inputs, iteration_range = (0,booster.best_ntree_limit))[:,1]
 				fpr, tpr, threshold = roc_curve(testing_outputs, predictions)
 				roc_auc = auc(fpr, tpr)
 
@@ -165,13 +145,8 @@ class Individual():
 				metrics_array[i].append(accuracy_score(deval.get_label(),predictions.round())) #1 Accuracy
 
 				metrics_array[i].append(1-(total_splits/(booster.best_ntree_limit*(2**(xgb_params['max_depth'])-1)))) #2 complexity Splits
-				#metrics_array[i].append(np.abs(self.dataset.shape[1]-booster.best_ntree_limit)/self.dataset.shape[1]) #1
-				#accuracy += accuracy_score(deval.get_label(),predictions.round())
-				#total_num_trees += booster.best_ntree_limit
 
 				metrics_array[i].append(weighted_geometric_mean(deval.get_label(),predictions.round(),np.unique(self.labels))) #3 wGM
-				#geo_mean += weighted_geometric_mean(deval.get_label(),predictions.round(),np.unique(self.labels))#list(set(self.labels)))
-
 
 				mertics_calc = mertics_calculator(deval.get_label(),predictions) #3
 
@@ -185,8 +160,6 @@ class Individual():
 				if self.multiclass:
 					metrics_array[i].append(1/mertics_calc['manhattan_distance'] if mertics_calc['manhattan_distance']>0 else 1.0) #9
 				i+=1
-
-			#print(f'#of trees in CV: {N_trees}')
 
 			#USE THE metrics_array TO CALCULATE STDV & MEAN!
 			mean_array = np.array(metrics_array).mean(axis=0)
@@ -237,8 +210,7 @@ class Individual():
 		'''Metric not used
 		evaluation_values.append(goal12) # Goal 12 is the index of Balanced Accuracy [IBA]
 		'''
-		#print(f'Individual: {self.process_i} ==> acc: {goal2} , GM: {goal4}')
-		#print(f'{self.process_i} GM: {goal11}, wGM: {goal4}, auc: {goal9}')
+
 		if self.process_i==0:
 			print(f'Acc: {goal2}, Model_compl[splits]: {goal3}, wGM: {goal4}')
 			print(f'F1: {goal5}, F2: {goal6}, Precision: {goal7}, Recall: {goal8}')
@@ -274,8 +246,7 @@ class Individual():
 			xgb_params['eval_metric']=['mlogloss']
 			xgb_params['num_class']=np.unique(self.labels).shape[0]
 
-# 		inputs = self.dataset[mask,:] # Apply the mask on the dataset to keep ONLY the "approved" features as inputs
-# 		inputs = inputs.T # Transpose the input to be Samples X Features
+
 		inputs = self.dataset.copy()
 		outputs = self.labels.copy()
 
@@ -351,7 +322,6 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
 	i=0
 	pareto1_intersected_features = filter_mask[index,parameters:].any(axis=0) #get the intersection of the feature names
 
-	#estimators = list()
 	dict_of_k_fold_pred = {}
 	for train_index, test_index in skf.split(inputs, labels):
 		training_inputs, testing_inputs = inputs[train_index], inputs[test_index]
@@ -400,16 +370,8 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
         
 		pickle.dump(dict_of_k_fold_pred, open(output_folder+'Dictionary_of_predictions.pkl', "wb"))
 
-        #for kfold in dict_of_k_fold_pred.keys():
-        #    for solution in dict_of_preds.keys():
-        #        if 
-        
-        #if not pareto_results_soft == []:
 		MJV_soft_predictions = np.asarray(pareto_results_soft).mean(axis=0)
 		MJV_hard_predictions = np.asarray(pareto_results_hard).mean(axis=0)
-		#print(f'{i+1}-fold:')
-		#print(pd.DataFrame([testing_outputs,MJV_soft_predictions,np.asarray(MJV_soft_predictions.round(),dtype='int'),MJV_hard_predictions,np.asarray(MJV_hard_predictions.round(),dtype='int')],
-		#index=['True', 'Soft', 'Soft_round', 'Hard', 'Hard_round'].T
 
 		fpr, tpr, threshold = roc_curve(testing_outputs, MJV_soft_predictions)
 		roc_auc = auc(fpr, tpr)
@@ -467,9 +429,6 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
 	pd.DataFrame({'fpr':fpr_array_soft,'tpr':tpr_array_soft,'auc':auc_array_soft}).to_csv(f"{output_folder}fpr_tpr_DataFrame_soft_{par_type}.csv")
 	pd.DataFrame({'fpr':fpr_array_hard,'tpr':tpr_array_hard,'auc':auc_array_hard}).to_csv(f"{output_folder}fpr_tpr_DataFrame_hard_{par_type}.csv")
 
-	#pd.DataFrame(fpr_tpr_array_soft).to_csv(f"{output_folder}fpr_tpr_array_soft_{par_type}.csv")
-	#pd.DataFrame(fpr_tpr_array_hard).to_csv(f"{output_folder}fpr_tpr_array_hard_{par_type}.csv")
-	#print(f'#of trees in CV: {N_trees}')
 
 	#USE THE metrics_array TO CALCULATE STDV & MEAN!
 	mean_array_soft = np.array(metrics_array_soft).mean(axis=0)
@@ -536,7 +495,6 @@ def weighted_geometric_mean(y_true,y_pred,unique_labels=None):
 			GM += geo_mean*support
 			print(f'Support for class_{i} = {support} and GM = {geo_mean}')
 		GM = GM/support_sum
-	#print(f'Weighted Geometric Mean = {GM}')
 	return GM
 
 def preprocessing_function(dataset_filename, labels_filename, as_pandas=False):
@@ -668,7 +626,6 @@ def normalize_dataset(dataset, output_folder=None,min_max_scaler=True):
 		normalizer = MaxAbsScaler()
 		dataset_normalized = normalizer.fit_transform(dataset.T)
 		dataset_normalized = dataset_normalized.T
-	#dataset = dataset_normalized.copy()
 	return dataset_normalized
 
 def transform_labels_to_numeric(labels,unique_labels):
@@ -787,23 +744,11 @@ def evaluate_individual(individual):
 	"""
 	return individual.evaluate()
 
-# def evaluate_individuals(dataset,dataset_normalized,dataset_with_missing_values,labels,individuals,
-						# goal_significances,num_of_folds,classification_problems,
-						# output_folder,
-						# JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes):
 
 def evaluate_individuals(dataset, labels, individuals, goal_significances, num_of_folds, classification_problems,
 						output_folder, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes, multiclass=True):
 
 	filter_mask = filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes)
-
-	#obj_individuals = []
-
-	#create a list of Individuals <objects>
-	# for i, individual in enumerate(individuals):
-		# # obj_individuals.append(Individual(individual, i, dataset, dataset_normalized, dataset_with_missing_values,
-										# # labels, num_of_folds, filter_mask))
-		# obj_individuals.append(Individual(individual, i, dataset, labels, num_of_folds, filter_mask))
 
 	# Create Individual Class instances and use them to find the fitness of the models. Then drop them to save memory
 	eval_time_start = time.time()
@@ -820,11 +765,6 @@ def evaluate_individuals(dataset, labels, individuals, goal_significances, num_o
 	1. modify the return of the method evaluate_individual (e.g. return the stdv)
 	2. split the results in lists
 	'''
-
-	# pool = mp.Pool(processes=mp.cpu_count()) # Create a pool object with the number of threads of the cpu as workers
-	# results = pool.map(evaluate_individual, obj_individuals, chunksize=1) # Calls the evaluate_individual method for all individuals parallel with max #threads
-	# pool.close()
-	# pool.join() # Bring all the workers together
 
 	eval_time_stop = time.time()
 	print(f'Time to run CV: {eval_time_stop-eval_time_start}')
@@ -843,13 +783,9 @@ def evaluate_individuals(dataset, labels, individuals, goal_significances, num_o
 
 	# Find the Model_complexity based on the #active_features in each individual solution
 	for ind in range(individuals.shape[0]):
-		#l=len(individuals[ind])-parameters # This is the length of the features of the input file e.g. 10 or 30
-		#selected = np.ones(l) # This is from the old version (biomarker_discovery_modeller_multiclass2.py)
 		''' HERE WE CHECK IF THE PARAMETERS ARE RIGHT TO FILTER THE GENES (Wilcoxon, mifs, SKB)'''
 
 		number_of_selected_feature=0
-		#number_of_selected_feature = np.count_nonzero(selected[parameters:]==1) and np.count_nonzero(filter_mask[ind,parameters:]>0.5)
-		#number_of_selected_feature = np.count_nonzero(filter_mask[ind,parameters:]>0.5)
 		number_of_selected_feature = np.count_nonzero(filter_mask[ind,parameters:])
 		goal1 = 0 # in case No_of_selectd_features <= 0
 		if number_of_selected_feature > 0:
@@ -857,8 +793,6 @@ def evaluate_individuals(dataset, labels, individuals, goal_significances, num_o
 			goal1 = 10/(10 + number_of_selected_feature) # 1 feature = 1, 2 features = 0.8333, ... 9 features = 0.4
 		evaluation_values[0,ind]= goal1 # [[goal1.0,goal1.1,goal1.2,goal1.3,...,goal1.len(individuals)-1],[],[],[]]
 	logging.info("Initial Feature Selection Completed Succesfully!")
-
-	#n_eval_values = evaluation_values.shape[0]-1 # -1 because the last row is the overall score
 
 	evaluation_values[1:-1] = results.T # Transpose the results to have a matrix: Eval_val X Indiv
 
@@ -893,7 +827,6 @@ def create_different_classification_problems(labels, unique_labels):
 		classification_problems: (list) the classification problems
 	"""
 
-	#classification_problems=[[] for i in range(int(((len(unique_categories)-1)*(len(unique_categories)))/2))]
 	classification_problems = np.zeros((math.factorial(len(unique_labels))//(math.factorial(len(unique_labels)-2)*2),labels.shape[0])) # n!/(k!*(n-k)!) -> n choose k
 	number_of_classification_problems=0
 
@@ -905,11 +838,9 @@ def create_different_classification_problems(labels, unique_labels):
 				elif labels[j]==unique_labels[k]:
 					classification_problems[number_of_classification_problems,j] = -1
 			number_of_classification_problems += 1
-	# print(classification_problems)
 	for i in range(len(classification_problems)):
 		#print(len(classification_problems[i]))
 		logging.info(len(classification_problems[i]))
-	#print("Classification problems were created successfully!")
 	logging.info("Classification problems were created successfully!")
 	return classification_problems
 
@@ -926,10 +857,7 @@ def Wilcoxon_ranksums(dataset_normalized, classification_problems):
 		for i in range(len(classification_problems)):
 			if selected[feature]==1:
 				break
-# 			category1_mean=0.0 #not used
-# 			category1_samples=0 #not used
-# 			category2_mean=0.0 #not used
-# 			category2_samples=0 #not used
+
 			data1=list()
 			data2=list()
 			for j in range(len(dataset_normalized[0])):
@@ -942,8 +870,6 @@ def Wilcoxon_ranksums(dataset_normalized, classification_problems):
 			if len(data1)>1 and len(data2)>1:
 				[z,pvalue] = ranksums(data1,data2)
 				if pvalue<0.05:
-				#if pvalue<individuals[0][3] and individuals[0][feature+4]>0.5:
-				#if  feature==570 or feature==11033 or feature==8144 or feature==1677 or feature==6423 or feature==4580 or feature==5194 or feature==2554 or feature==5776 or feature==8491:
 					selected[feature]=selected[feature]+1
 	return selected
 
@@ -964,8 +890,6 @@ def mifs_calc(data, labels, method = 'JMI', n_features = 100, k_vals = 4):
 		raise TypeError('k must be an integer')
 
 
-	# if method==None:
-		# method = ['JMI','MRMR']
 	if not (method in ['JMI','MRMR','JMIM']):#!='JMI' or method!='JMIM' or method!='mRMR':
 		raise ValueError('method should be: \'JMI\', \'JMIM\' or \'MRMR\'')
 
@@ -1056,10 +980,6 @@ def filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest
 	'''
 	Applies the Feature selection method (or not) based on the parameter genes each individual has
 	'''
-	# print(f'JMI shape: {JMI_genes.shape}')
-	# print(f'mRMR shape: {mRMR_genes.shape}')
-	# print(f'Wilcoxon shape: {Wilcoxon_genes.shape}')
-	# print(f'Select k best shape: {SelKBest_genes.shape}')
 	filter_mask = individuals.copy()
 	for indiv in range(individuals.shape[0]):
 		if int(individuals[indiv,0]) != 0:#No Feature Selection method
@@ -1071,7 +991,6 @@ def filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest
 						print('JMI FS has selected no features. No filtering will apply on the features!')
 						continue
 					else:
-						#FS_genes = JMI_genes.iloc[int(individuals[indiv,2])-4].to_numpy()
 						FS_genes = JMI_genes[int(individuals[indiv,2])-4] # k = [4,5,6,...,10] that's why we subtract 4 to have the right index
 
 				elif int(individuals[indiv,0]) == 2: #Wilcoxon ranksums
@@ -1162,9 +1081,7 @@ def similarity_function(fronts, evaluation_values, individuals, sigma_share, max
 				m=1
 
 			evaluation_values_f[:-1,ind[j]] = front_max_eval/m
-			# print(f'MAX EVAL / m_i = {evaluation_values_f[:-1,ind[j]]}')
-			# evaluation_values_f_test[:-1,ind[j]] /= m
-			# print(f'eval_i / m_i = {evaluation_values_f_test[:-1,ind[j]]}')
+
 			logging.info("m = "+str(m))
 			ms[i] += m
 		ms[i] /= ind.shape[0]
@@ -1185,7 +1102,6 @@ def similarity_function_rounded(fronts, evaluation_values, individuals, sigma_sh
 		logging.info(f'Frontier: {str(front)}')
 
 		ind = np.argwhere(fronts == front).ravel()
-# 		ind = np.array(np.where(fronts == front)).ravel()
 
 		dist_mat = np.zeros([ind.shape[0],ind.shape[0]],dtype = 'float') #  distance matrix of individuals belong in the same frontier
 
@@ -1206,20 +1122,13 @@ def similarity_function_rounded(fronts, evaluation_values, individuals, sigma_sh
 					#d = math.sqrt(d/individuals.shape[1])
 					d += np.logical_xor(individuals_temp[ind[j]],individuals_temp[ind[k]]).sum() # XOR(gene_a,i,gene_b,i)
 					n_union = np.union1d(np.argwhere(individuals_temp[ind[j]]==1),np.argwhere(individuals_temp[ind[k]]==1)).shape[0]# #N_union
-					if n_union>0: #there is at least 1 gene active in any of the chromosomes
+					if n_union > 0: #there is at least 1 gene active in any of the chromosomes
 						d /= n_union
 
-					#print()
-					#c = 0
-					#if d!=0 and d_par!=0:
-					#	c = 2*((d*d_par)/(d+d_par))
 					d += d_par
 					d /= 2.0
-					#d = c
-					#print(f'New dist: {c}\tOld dist: {d}\n{c<=sigma_share}\t{d<=sigma_share}')
 
 					dist_mat[j,k] = dist_mat[k,j] = d
-					#dist_mat[j,k] = dist_mat[k,j] = c
 					if d<=sigma_share:
 						m += 1-((d/sigma_share)**2)
 				else:
@@ -1236,7 +1145,6 @@ def similarity_function_rounded(fronts, evaluation_values, individuals, sigma_sh
 			ms[i] += m
 		ms[i] /= ind.shape[0]
 		print(f'Mean m for frontier {front} ({ind.shape[0]}) = {ms[i]}')
-		#i+=1
 	return evaluation_values_f
 
 
@@ -1251,8 +1159,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 	sum_ranked_eval_per_generation = np.empty(generations)
 	selected_individuals = np.empty((population, min_values.shape[0]))
 
-	#if multiclass==False:
-	#	eval_names = np.delete(eval_names,-2)
 
 	for rep in range(generations):
 		logging.info("Generation:"+str(rep))
@@ -1266,10 +1172,8 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		logging.info(f'The features used are:\n{out_vars}')
 
 
-		#output_list = features_selected(out_vars)
 		with open(output_folder + 'Selected Features.txt','a') as feature_position_file:
 			feature_position_file.write(f'Generation {rep}:\n')
-			#for i in range(len(output_list)):
 			for i in range(len(out_vars)):
 				if out_vars[i].shape[0]==0:
 					feature_position_file.write(f'Indiv_{i} -> None\n')
@@ -1277,17 +1181,12 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 					feature_position_file.write(f'Indiv_{i} -> {out_vars[i]}\n')
 			feature_position_file.write('-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\n\n')
 
-			#feature_position_file.write('Generation: '+str(rep)+'\n'+str(output_list)+'\n\n')
-
 
 		#evaluate the population of solutions
 		evaluation_values, mean_std_list, roc_auc_list, _ = evaluate_individuals(dataset, labels, individuals,
 																		   goal_significances, num_of_folds, classification_problems,
 																		   output_folder, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes, multiclass)
 
-		# evaluation_values = evaluate_individuals(dataset,dataset_normalized,dataset_with_missing_values,labels,individuals,
-												# goal_significances,num_of_folds,classification_problems,
-												# output_folder, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes)
 		"""
 		evaluation_values:
 			Goals X Individuals -> ~10-15 goals X population
@@ -1305,7 +1204,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
 		#find and write to file maximum and average performances
 
-		#max_eval1 = np.max(evaluation_values[:-1].mean(axis=0)) # Get the maximum overall_score
 		best_overall_indiv_pos = evaluation_values[-1].argmax() # Get the index of the individual with the highest overall score
 		best_auc_indiv_pos = evaluation_values[-3].argmax()
 		best_bAcc_indiv_pos = evaluation_values[-2].argmax()
@@ -1322,7 +1220,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		with open(output_folder+"CV_best_performance.txt",'a') as bst_perf:
 			bst_perf.write(str(max_eval_per_generation[rep])+"\n")
 
-		#average_eval = evaluation_values[-1].mean()#evaluation_values[-1].sum()/population
 		average_eval = evaluation_values[:-1].mean()
 		average_eval_per_generation[rep] = average_eval
 		with open(output_folder+"CV_average_performance.txt",'a') as avg_perf:
@@ -1333,7 +1230,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 			best_evals.write(f'Generation: {rep}\n')
 			for i in range(eval_names.shape[0]):
 				best_evals.write(str(eval_names[i])+':\t'+str(mean_std_list[best_indiv_pos][i][0])+u" \u00B1 "+str(mean_std_list[best_indiv_pos][i][1])+'\n')
-				#best_evals.write(str(eval_names[i])+':\t'+str(evaluation_values[i,best_indiv_pos])+'\n')
 			best_evals.write('Unweighted overall :\t'+str(evaluation_values[:-1,best_indiv_pos].mean())+'\n\n')
 
 		#########
@@ -1345,10 +1241,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
 
 		plt.title('Receiver Operating Characteristic')
-        # plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
-# 		for i in range(len(roc_auc_list[best_indiv_pos])):
-# 			plt.plot(roc_auc_list[best_indiv_pos][i][0], roc_auc_list[best_indiv_pos][i][1], 'b', label = 'AUC = %0.2f' % roc_auc_list[best_indiv_pos][i][-1], linewidth=0.4, alpha=0.5)
-		######
 
 		tprs = []
 		aucs = []
@@ -1361,7 +1253,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		    tprs.append(interp_tpr)
 		    aucs.append(roc_auc_list[best_indiv_pos][i][-1])
 		    ax.plot(roc_auc_list[best_indiv_pos][i][0], roc_auc_list[best_indiv_pos][i][1], color='green', label = None, linewidth=0.4, alpha=0.1)
-# 			ax.plot(roc_auc_list[best_indiv_pos][i][0], roc_auc_list[best_indiv_pos][i][1], color='green', label = 'AUC = %0.2f' % roc_auc_list[best_indiv_pos][i][-1], linewidth=0.4, alpha=0.1)
 
 		ax.plot([0, 1], [0, 1], linestyle="--", lw=1.5, color="r", label="Random AUC = 0.5", alpha=0.8)
 
@@ -1380,10 +1271,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		ax.set(title=f"ROC/AUC MEvA-XGBoost P:{population} G:{generations}")
 		ax.set_xlabel("False Positive Rate")
 		ax.set_ylabel("True Positive Rate")
-# 		    xlim=[-0.05, 1.05],
-# 		    ylim=[-0.05, 1.05],
-# 		    ,
-# 		)
+
 		ax.legend(loc="lower right", prop={'size': 6})
 		plt.tight_layout()
 		plt.savefig(output_folder+f'{rep}_ROC.png',dpi=600)
@@ -1411,7 +1299,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 			print("Convergence Percentage is impossible to calculate because average_performance = 0")
 
 		print(f'Average performance: {average_performance}')
-		#print("Best Performance="+str(evaluation_values[0][-1]))
 
 		#Convergence criterion is checked in order to stop the evolution if the population is deemd us converged
 		with open(output_folder+'Convergence.txt','a') as f:
@@ -1444,46 +1331,40 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		with open(output_folder+'timing.txt','a') as time_file:
 			time_file.write(f'Generation: {rep}\nPareto frontier operation took: {Pareto_time_stop-Pareto_time_start}\n')
 
-		#plot_pareto(evaluation_values, fronts) #use this function to see if the pareto works ok (In 3D or in many 2D plots) it's hard to interpret the results
-
 		pareto_distance_time_start = time.time()
 
+		# Αpply selection operator: Ranked base selection is used
 
-		#apply selection operator: Ranked base selection is used
-
-		#Tune fitness values by locating and using solution niches
+		# Tune fitness values by locating and using solution niches
 		sigma_share = 0.5/(float(individuals.shape[1])**(0.1))
 		#sigma_share = 0.1/(float(individuals.shape[1])**(0.2))
 
-		#Use the rounded version aka XOR distance between individual solutions
-		#evaluation_values_1 = similarity_function_rounded(fronts, evaluation_values, individuals, sigma_share, max_values, min_values)
+		# Use the rounded version aka XOR distance between individual solutions
+		# evaluation_values_1 = similarity_function_rounded(fronts, evaluation_values, individuals, sigma_share, max_values, min_values)
 		# Normal gene - gene distance between individual solutions
 		evaluation_values_1 = similarity_function_rounded(fronts, evaluation_values, individuals, sigma_share, max_values, min_values)
 
-		#print("evaluation_values=")
 		evaluation_values = evaluation_values_1.copy()
 		logging.info("evaluation_values=")
-		#print(evaluation_values)
 		logging.info(evaluation_values)
 
-		#Update the overall score based on the tuned fitness values
+		# Update the overall score based on the tuned fitness values
 		# Eval_values_overall = [(b0*x0)+(b1*x1)+(b2*x2)+...+(b_n-2*x_n-2)+(b_n-1*x_n-1)]
 		n_eval_values = evaluation_values.shape[0]-1
 		for i in range(population): # For all individuals
 			evaluation_values[-1,i] = (np.multiply(evaluation_values[:-1,i],goal_significances.T).sum())/n_eval_values
 
 		pareto_distance_time_stop = time.time()
-		#print(f'Calculating the similarities of Niches / pareto frontiers (m) took: {pareto_distance_time_stop - pareto_distance_time_start}')
 		with open(output_folder+'timing.txt','a') as time_file:
 			time_file.write(f'Calculating the similarities of Niches / pareto frontiers (m) took: {pareto_distance_time_stop - pareto_distance_time_start}\n')
 			time_file.write(f'# of fronts:{list(set(fronts))}\n')
 
 
 
-		#NEW Generation preparation
+		# NEW Generation preparation
 		selected_individuals[0]=individuals[best_indiv_pos] # The individual with the highest overall_score before niches
 
-		#Keep the parameter values and the Activated genes of the 'Best'/0-th individual in a file
+		# Keep the parameter values and the Activated genes of the 'Best'/0-th individual in a file
 		on_genes_indx = np.arange(individuals[best_indiv_pos,parameters:].shape[0])[individuals[best_indiv_pos,parameters:]>0.5]
 		with open(output_folder+"best_solutions_active_genes.txt",'a') as best_solutions_fid:
 			best_solutions_fid.write('Generation: '+str(rep)+'\n')
@@ -1491,7 +1372,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 			best_solutions_fid.write('Active Features: '+str(on_genes_indx)+'\n\n')
 
 
-		#Keep the parameter values and all the non-zero genes of the 'Best'/0-th individual in a file
+		# Keep the parameter values and all the non-zero genes of the 'Best'/0-th individual in a file
 		on_genes_indx = np.arange(individuals[best_indiv_pos,parameters:].shape[0])[individuals[best_indiv_pos,parameters:]>0]
 		with open(output_folder+"best_solutions_all_nonzero_genes.txt",'a') as best_solutions_all_fid:
 			best_solutions_all_fid.write('Generation: '+str(rep)+'\n')
@@ -1504,24 +1385,21 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		sum_ranked = evaluation_values[-1].sum() # Find the sum of overall scores for all individuals
 
 		sum_ranked_eval_per_generation[rep] = sum_ranked
-		#average_ranked_eval_per_generation[rep] = sum_ranked/population
 
 		sum_prop = np.zeros(population+1)
-		sum_change = np.zeros(population) # @17/11/2020
+		sum_change = np.zeros(population)
 
 		if sum_ranked > 0:
 			for i in range(1, population+1):
 				sum_prop[i] = sum_prop[i-1] + (evaluation_values[-1,i-1]/float(sum_ranked_eval_per_generation[rep])) ##Check this out
 				sum_change[i-1] = (evaluation_values[-1,i-1]/float(sum_ranked_eval_per_generation[rep])) #17/11/2020
-		# with open(output_folder+'Roulette.txt','a') as roulette:
-			# roulette.write(f'Generation {rep}\n{sum_prop}\n')
-		# roulette.close()
+
 
 		with open(output_folder+'Roulette_change.txt','a') as roulette:
 			roulette.write(f'Generation {rep}\n{sum_change}\n')
 
 
-		#Roulette is based on the sum_change not the sum_prop. Essentially it is the probability of a solution to be selected
+		# Roulette is based on the sum_change not the sum_prop. Essentially it is the probability of a solution to be selected
 		# From 100 s=individuals pick 99 with Pr(i) = sum_change[i]. With replacement (can pick the same solution more than once)
 		sel_indx = np.random.choice(a=population, size=population-1, replace=True, p=sum_change)
 		for i in range(population-1):
@@ -1534,7 +1412,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
 
 		preparation_for_crossover_time_stop = time.time()
-		#print(f'preparation_for_crossover_time = {preparation_for_crossover_time_stop - preparation_for_crossover_time_start}')
 		with open(output_folder+'timing.txt','a') as time_file:
 			time_file.write(f'Preparation_for_crossover_time = {preparation_for_crossover_time_stop - preparation_for_crossover_time_start}\n')
 
@@ -1573,12 +1450,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 				temp_cross_over = selected_individuals[i+1, parameters+cross_point1:parameters+cross_point2].copy()
 				selected_individuals[i+1, parameters+cross_point1:parameters+cross_point2] = selected_individuals[i, parameters+cross_point1:parameters+cross_point2].copy()
 				selected_individuals[i, parameters+cross_point1:parameters+cross_point2] = temp_cross_over.copy()
-				# for j in range(cross_point1,cross_point2+1):
-					# temp_cross_over=selected_individuals[i+1,j]
-				# for j in range(cross_point1,cross_point2+1):
-					# selected_individuals[i+1,j]=selected_individuals[i,j]
-				# for j in range(cross_point1,cross_point2+1):
-					# selected_individuals[i,j]=temp_cross_over
 
 			elif random_number[i]>two_points_crossover_probability and random_number[i]<(two_points_crossover_probability+arithmetic_crossover_probability):
 				alpha=np.random.uniform(0,1)
@@ -1592,12 +1463,11 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 					tf.write(f"Generation: {rep}:\n Indiv_{i}, Indiv_{i+1} --> alpha = {alpha} => CH1 = alpha*A + (1-alpha)*B , CH2 = (1-alpha)*A + alpha*B"+'\n')
 
 		cross_over_time_stop = time.time()
-		#print(f'Cross over time = {cross_over_time_stop - cross_over_time_start}')
 		with open(output_folder+'timing.txt','a') as time_file:
 			time_file.write(f'Cross over time = {cross_over_time_stop - cross_over_time_start}\n')
 
 
-		#apply mutation operator
+		# Αpply mutation operator
 		mutation_time_start = time.time()
 		with open(output_folder+'Mutation_points.txt', 'a') as tf:
 			tf.write(f'Generation: {rep}'+'\n')
@@ -1605,7 +1475,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 		sele_indivs = mutation(selected_individuals, population, min_values, max_values, mutation_probability, generations, rep, mu=0, s=0.1)
 
 		mutation_time_stop = time.time()
-		#print(f'Mutation took = {mutation_time_stop - mutation_time_start}')
 		with open(output_folder+'timing.txt','a') as time_file:
 			time_file.write(f'Mutation took = {mutation_time_stop - mutation_time_start}\n')
 
@@ -1640,19 +1509,19 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 	unique_labels = np.sort(unique_labels, axis=None)
 
 	multiclass = True
-	#If there is a two class problem, don't use Manhatan_dist
+	# If there is a two class problem, don't use Manhatan_dist
 	if unique_labels.shape[0]==2:
 		multiclass = False
 		goal_significances = np.delete(goal_significances,-2)
 		eval_names = np.delete(eval_names,-2)
 		#goal_significances[-2]=0
 
-	#Fill missing values
+	# Impute missing values
 	if missing_values_flag:
 		dataset_with_missing_values = impute(labels,dataset)
 		dataset = dataset_with_missing_values.copy()
 
-	#Normalize data in scale [0,1]
+	# Normalize data in scale [0,1]
 	if normalize_flag:
 		dataset_normalized = normalize_dataset(dataset)
 		dataset = dataset_normalized.copy()
@@ -1664,7 +1533,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 
 	individuals = initialize_individuals(min_values, max_values, population)
 
-	#Calculate or import the genes with FS methods
+	# Calculate or import the genes with FS methods
 	if FS_calc:
 		try:
 			#FS_methods = mifs_calc(dataset, labels, k_vals=k_vals, n_features=n_features)
@@ -1691,7 +1560,6 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 
 		try:
 			k_bst=100
-			#SelKBest_genes = SelectKBest(mutual_info_classif, k=100).fit(dataset.T,labels).get_support(indices = True)
 			SelKBest_genes = SelectKBest(mutual_info_classif, k=k_bst).fit(dataset.T,labels) # This is an <object> you can use .scores_ to get the best features
 			SelKBest_genes = np.flip(np.argsort(SelKBest_genes.scores_))[:k_bst]
 			SelKBest_genes = SelKBest_genes.astype(np.int32, copy=False)
@@ -1700,7 +1568,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 			print('Select K Best (SKB) Feature selection failed. No filtering will apply on the features.')
 			SelKBest_genes = None
 	else:
-		#JMI
+		# JMI
 		try:
 			try:
 				JMI_genes = pd.read_csv(FS_dir+'JMI.tsv', sep='\t', header = None).to_numpy().squeeze().astype(np.int32,copy=False)
@@ -1710,7 +1578,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 			print('No such a file found for JMI. No filtering will apply on the features')
 			JMI_genes = None
 
-		#mRMR
+		# mRMR
 		try:
 			try:
 				mRMR_genes = pd.read_csv(FS_dir+'mRMR.tsv', sep='\t', header = None).to_numpy().squeeze().astype(np.int32,copy=False)
@@ -1720,7 +1588,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 			print('No such a file found for mRMR. No filtering will apply on the features')
 			mRMR_genes = None
 
-		#Wilcoxon
+		# Wilcoxon
 		try:
 			try:
 				Wilcoxon_genes = pd.read_csv(FS_dir+'Wilcoxon_ranksums.tsv', sep='\t', header = None).to_numpy().squeeze().astype(np.int32,copy=False)
@@ -1730,7 +1598,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 			print('No such a file found for Wilcoxon rank sums. No filtering will apply on the features')
 			Wilcoxon_genes = None
 
-		#SKB
+		# SKB
 		try:
 			try:
 				SelKBest_genes = pd.read_csv(FS_dir+'Select_K_Best.tsv', sep='\t', header = None).to_numpy().squeeze().astype(np.int32,copy=False)
@@ -1753,8 +1621,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 	evaluation_values = np.array(evaluation_values, dtype = float)
 
 	average_performance = np.mean(evaluation_values[-1])
-	fronts = pareto_frontiers(evaluation_values) # @ 2/12/2020
-	#fronts = pareto_frontiers(population, individuals, evaluation_values)
+	fronts = pareto_frontiers(evaluation_values)
 
 	with open(output_folder+'Pareto_fronts.txt','a') as pfronts:
 		pfronts.write('\nLast Pareto:\n')
@@ -1782,9 +1649,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 		np.savetxt(output_folder+f'Pareto_1_results/{eval_name}.txt', delimiter=',', X=first_pareto_individuals[pareto1_maximums[i],:].reshape(1,-1),fmt='%.5f')
 		np.savetxt(output_folder+f'Pareto1_metrics_ALL_{eval_name}.csv', delimiter=',', X=evaluation_values[:,pareto1_indx],fmt='%.5f') #.reshape(1,-1)
 
-		#with open(output_folder + 'Pareto_1_results/' + eval_name+'.txt','w') as bst_metric_file:
-			#bst_metric_file.write(f'{eval_name} \n{first_pareto_individuals[pareto1_maximums,i]}')
-			#bst_metric_file.write(f'{eval_name} \n{individuals[pareto1_indx][pareto1_maximums][i]}')
+
 	print('\nTraining of the final models started\n')
 	# Train and save the final models
 
@@ -1881,17 +1746,12 @@ if __name__ == "__main__":
 
     [dataset, feature_names, sample_names, labels] = preprocessing_function(dataset_filename,labels_filename, as_pandas=True)
 
-    #PARAMETERS:
-    #						1	2	3	4		5	6	7	8	9	10	11	12 13
+    ####### PARAMETERS #######
+    						1	2	3	4		5	6	7	8	9	10	11	12 13
     min_values = np.array([0,	0,	4,	1,	0.01,	1,	0,	0,	0,	0,	0])#, 0.3, 0.3]) # 1.FS_method  2.use_of_FS  3.k-NN(mifs)  4.k_SKB  5.eta  6.max_depth  7.gamma
     max_values = np.array([5,	3,	11,	101, 0.35,	7,	10,	10,	8,	15,	5])#, 1.0, 1.0]) # 8.lambda  9.alpha  10.min_child_weight  11.scale_pos_weight  12.colsample  13.subsample
-    #max_values = np.array([4+1, 2+1, 10+1, 100+1, 0.5, 9+1,4,10,8,4,5]) # 7.gamma  8.lambda  9.alpha  10.min_child_weight  11.scale_pos_weight
     parameters = max_values.shape[0]
 
-    # min_values = np.append(min_values, np.zeros(dataset.shape[0]))
-    # max_values = np.append(max_values, np.ones(dataset.shape[0]))
-    #population = int(input("Population = "))
-    #generations = int(input("Generations = "))
     num_of_folds = int(input("K-fold = "))
 
     '''This section is here to test the Feature selection methods'''
