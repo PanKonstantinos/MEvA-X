@@ -42,7 +42,7 @@ Dependencies:
 </table> 
 
 Example for calling MEvA-X_V2 from terminal:
-`python MEvA-X.py`
+```python MEvA-X.py```
 
 (Comming soon) Example for calling MEvA-X_V2 from terminal:
 ```
