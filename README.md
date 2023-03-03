@@ -99,23 +99,28 @@ Parameters of the algorithm:
     <td><i>None</i></td>
   </tr>
   <tr>
-    <td>mifs</td>
-    <td>0.0.1.dev0</td>
-    <td>https://github.com/danielhomola/mifs</td>
+    <td>two_points_crossover_probability</td>
+    <td>probability of the offsprings to be produced by the exchange of pieces from the parental individuals</td>
+    <td>0.1 (10%)</td>
   </tr>
   <tr>
-    <td>pickle5</td>
-    <td></td>
-    <td>https://pypi.org/project/pickle5/</td>
+    <td>arithmetic_crossover_probability</td>
+    <td>probability of an arithmetic crossover of the parental individuals to produce the offsprings</td>
+    <td>0.0 (0%)</td>
   </tr>
   <tr>
-    <td>knnimpute</td>
-    <td>0.1.0</td>
-    <td>https://github.com/iskandr/knnimpute</td>
+    <td>mutation_probability</td>
+    <td>probability of an offspring to mutate</td>
+    <td>0.05 (5%)</td>
   </tr>
   <tr>
-    <td>requests</td>
-    <td>2.28.1</td>
-    <td>https://pypi.org/project/requests/</td>
+    <td>goal_significances_filename</td>
+    <td>array of weights for the objectives</td>
+    <td>array of ones in the length of the objectives</td>
+  </tr>
+ <tr>
+    <td>num_of_folds</td>
+    <td>Number of folds for cross validation</td>
+    <td>10</td>
   </tr>
 </table>
