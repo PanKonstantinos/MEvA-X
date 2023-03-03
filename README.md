@@ -55,6 +55,11 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
     <td>0.1.0</td>
     <td>https://github.com/iskandr/knnimpute</td>
   </tr>
+  <tr>
+    <td>requests</td>
+    <td>2.28.1</td>
+    <td>https://pypi.org/project/requests/</td>
+  </tr>
 </table>
 
 <h2>Example of calling MEvA-X from terminal:</h2>
