@@ -1795,9 +1795,9 @@ if __name__ == "__main__":
 	os.chdir(dname)
 	#####
 	current_dir = os.getcwd()
-	FS_dir = os.path.join(current_dir, 'Opera/FS_methods/')
-	dataset_filename = './Opera/opera_full_dataset_headers.csv'
-	labels_filename = f'./Opera/opera_full_labels_binary_{opera_label}.csv'
+	FS_dir = os.path.join(current_dir, 'Data/Opera/FS_methods/')
+	dataset_filename = './Data/Opera/opera_full_dataset_headers.csv'
+	labels_filename = f'./Data/Opera/opera_full_labels_binary_{opera_label}.csv'
 
 	[dataset, feature_names, sample_names, labels] = preprocessing_function(dataset_filename,labels_filename, as_pandas=True)
 
