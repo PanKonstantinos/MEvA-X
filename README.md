@@ -46,7 +46,7 @@ Dependencies:
   <tr>
     <td>pickle</td>
     <td></td>
-    <td>https://pypi.org/project/pickle/</td>
+    <td>https://docs.python.org/3/library/pickle.html</td>
   </tr>
   <tr>
     <td>knnimpute</td>
