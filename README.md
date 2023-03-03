@@ -103,7 +103,7 @@ Parameters of the algorithm:
   <tr>
     <td>two_points_crossover_probability</td>
     <td>probability of the offsprings to be produced by the exchange of pieces from the parental individuals</td>
-    <td>0.1 (10%)</td>
+    <td>0.9 (90%)</td>
   </tr>
   <tr>
     <td>arithmetic_crossover_probability</td>
