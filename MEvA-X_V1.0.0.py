@@ -1780,7 +1780,7 @@ if __name__ == "__main__":
 	#####
 	current_dir = os.getcwd()
 	FS_dir = os.path.join(current_dir, 'Data/Ornish/FS_methods/')
-	dataset_filename = './Data/Ornish/diet_dataset_batch_effect_removed.txt'
+	dataset_filename = './Data/Ornish/diet_dataset.txt'
 	labels_filename = './Data/Ornish/diet_labels.txt'
 
 
