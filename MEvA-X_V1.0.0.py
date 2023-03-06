@@ -1761,93 +1761,93 @@ def picklefy_variables(var,var_name,output_folder):
 
 
 if __name__ == "__main__":
-    prog_time = time.time()
+	prog_time = time.time()
 
-    #dataset_filename=sys.argv[1]
-    #labels_filename=sys.argv[2]
-    #population=int(sys.argv[3])
-    #generations=int(sys.argv[4])
-    #two_points_crossover_probability=float(sys.argv[5])
-    #arithmetic_crossover_probability=float(sys.argv[6])
-    #mutation_probability=float(sys.argv[7])	
-    #goal_significances_filename=sys.argv[8]
-    #num_of_folds=int(sys.argv[9])
-    
-    #####
-    abspath = os.path.abspath(__file__)
-    dname = os.path.dirname(abspath)
-    os.chdir(dname)
-    #####
-    current_dir = os.getcwd()
-    FS_dir = os.path.join(current_dir, 'Data/Ornish/FS_methods/')
-    dataset_filename = './Data/Ornish/diet_dataset_batch_effect_removed.txt'
-    labels_filename = './Data/Ornish/diet_labels.txt'
+	#dataset_filename=sys.argv[1]
+	#labels_filename=sys.argv[2]
+	#population=int(sys.argv[3])
+	#generations=int(sys.argv[4])
+	#two_points_crossover_probability=float(sys.argv[5])
+	#arithmetic_crossover_probability=float(sys.argv[6])
+	#mutation_probability=float(sys.argv[7])	
+	#goal_significances_filename=sys.argv[8]
+	#num_of_folds=int(sys.argv[9])
+
+	#####
+	abspath = os.path.abspath(__file__)
+	dname = os.path.dirname(abspath)
+	os.chdir(dname)
+	#####
+	current_dir = os.getcwd()
+	FS_dir = os.path.join(current_dir, 'Data/Ornish/FS_methods/')
+	dataset_filename = './Data/Ornish/diet_dataset_batch_effect_removed.txt'
+	labels_filename = './Data/Ornish/diet_labels.txt'
 
 
-    [dataset, feature_names, sample_names, labels] = preprocessing_function(dataset_filename,labels_filename, as_pandas=True)
+	[dataset, feature_names, sample_names, labels] = preprocessing_function(dataset_filename,labels_filename, as_pandas=True)
 
-    ####### PARAMETERS #######
-    						1	2	3	4		5	6	7	8	9	10	11	12 13
-    min_values = np.array([0,	0,	4,	1,	0.01,	1,	0,	0,	0,	0,	0])#, 0.3, 0.3]) # 1.FS_method  2.use_of_FS  3.k-NN(mifs)  4.k_SKB  5.eta  6.max_depth  7.gamma
-    max_values = np.array([5,	3,	11,	101, 0.35,	7,	10,	10,	8,	15,	5])#, 1.0, 1.0]) # 8.lambda  9.alpha  10.min_child_weight  11.scale_pos_weight  12.colsample  13.subsample
-    parameters = max_values.shape[0]
+	####### PARAMETERS #######
+	# 						1	2	3	4		5	6	7	8	9	10	11	12 13
+	min_values = np.array([0,	0,	4,	1,	0.01,	1,	0,	0,	0,	0,	0])#, 0.3, 0.3]) # 1.FS_method  2.use_of_FS  3.k-NN(mifs)  4.k_SKB  5.eta  6.max_depth  7.gamma
+	max_values = np.array([5,	3,	11,	101, 0.35,	7,	10,	10,	8,	15,	5])#, 1.0, 1.0]) # 8.lambda  9.alpha  10.min_child_weight  11.scale_pos_weight  12.colsample  13.subsample
+	parameters = max_values.shape[0]
 
-    population = int(input("Population = "))
+	population = int(input("Population = "))
 	generations = int(input("Generations = "))
 	num_of_folds = int(input("K-fold = "))
 
 
-    '''This section is here to test the Feature selection methods'''
-    FS_calc = input("Do you need to calculate the feature selection algorithms? (Y/N): ")
-    if FS_calc.upper() in ['Y','YES']:
-        FS_calc = True
-        try:
-            k_vals = []
-            print('Give a list of k (one at a time) for the KNN of the mutual information methods [4-10 is recommended]: ')
-            while True:
-                k_vals.append(int(input()))
-                k_vals = list(np.unique(k_vals))
-        except:
-            pass
-        n_features = int(input('Give the number of best features to keep: '))
-    else:
-        FS_calc = False
-    '''up to this line.'''
+	'''This section is here to test the Feature selection methods'''
+	FS_calc = input("Do you need to calculate the feature selection algorithms? (Y/N): ")
+	if FS_calc.upper() in ['Y','YES']:
+		FS_calc = True
+		try:
+			k_vals = []
+			print('Give a list of k (one at a time) for the KNN of the mutual information methods [4-10 is recommended]: ')
+			while True:
+				k_vals.append(int(input()))
+				k_vals = list(np.unique(k_vals))
+		except:
+			pass
+		n_features = int(input('Give the number of best features to keep: '))
+	else:
+		FS_calc = False
+	'''up to this line.'''
 
-    two_points_crossover_probability = 0.9
-    arithmetic_crossover_probability = 0
-    mutation_probability = 0.05
-    # G1:Feature_compl, G2:Acc, G3:Split_compl, G4:wGM, G5:F1, G6:F2, G7:Precision, G8:Recall, G9:AUC, G10:Manhatan_dist, G11:GM
-    ans = str(input('Use the unweighted (default) metrics? (Y/N): '))
-    if ans.upper() in ['Y','YES']:
-        goal_significances = np.ones(11)
-    else:
-    	# Give the weights for the evaluation metrics here
-        goal_significances = np.array([0.8,0.8,0.8,2,1,1,1,1,2,0.5,2])
+	two_points_crossover_probability = 0.9
+	arithmetic_crossover_probability = 0
+	mutation_probability = 0.05
+	# G1:Feature_compl, G2:Acc, G3:Split_compl, G4:wGM, G5:F1, G6:F2, G7:Precision, G8:Recall, G9:AUC, G10:Manhatan_dist, G11:GM
+	ans = str(input('Use the unweighted (default) metrics? (Y/N): '))
+	if ans.upper() in ['Y','YES']:
+		goal_significances = np.ones(11)
+	else:
+		# Give the weights for the evaluation metrics here
+		goal_significances = np.array([0.8,0.8,0.8,2,1,1,1,1,2,0.5,2])
 
-    print(f'Weights: {goal_significances}')
+	print(f'Weights: {goal_significances}')
 
-    tstamp = time.strftime('%Y_%m_%d')
-    output_folder = os.path.join(dname,'XGB_Results_diet\\'+f'P{population}_G{generations}_K{num_of_folds}'+'_'+str(time.time())+'\\')
+	tstamp = time.strftime('%Y_%m_%d')
+	output_folder = os.path.join(dname,'XGB_Results_diet\\'+f'P{population}_G{generations}_K{num_of_folds}'+'_'+str(time.time())+'\\')
 
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+	if not os.path.exists(output_folder):
+		os.makedirs(output_folder)
 
-    #Select if normalization and imputation will take place
-    missing_values_flag = True
-    normalize_flag = True
+	#Select if normalization and imputation will take place
+	missing_values_flag = True
+	normalize_flag = True
 
-    with open(output_folder+'Inputs.txt','a') as param_file:
-        param_file.write(f'cwd: {current_dir}\ndataset file: {dataset_filename}\n')
-        param_file.write(f'labels file: {labels_filename}\nNumber of parameters: {parameters}\n')
-        param_file.write(f'Population: {population}\nGenerations: {generations}\n')
-        param_file.write(f'k-folds: {num_of_folds}')
+	with open(output_folder+'Inputs.txt','a') as param_file:
+		param_file.write(f'cwd: {current_dir}\ndataset file: {dataset_filename}\n')
+		param_file.write(f'labels file: {labels_filename}\nNumber of parameters: {parameters}\n')
+		param_file.write(f'Population: {population}\nGenerations: {generations}\n')
+		param_file.write(f'k-folds: {num_of_folds}')
 
-    eval_names = np.array(['Model_complexity #features','Accuracy','Model_complexity #splits',
-                                'weighted Geometric Mean','F1 score','F2 score','Precision','Recall','AUrocC',
-                                'Balanced_accuracy','Manhattan distance^-1','Overall_score'])
+	eval_names = np.array(['Model_complexity #features','Accuracy','Model_complexity #splits',
+		'weighted Geometric Mean','F1 score','F2 score','Precision','Recall','AUrocC',
+		'Balanced_accuracy','Manhattan distance^-1','Overall_score'])
 
-    biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, min_values, max_values, population,
-                                generations, two_points_crossover_probability, arithmetic_crossover_probability,
-                                mutation_probability, goal_significances, num_of_folds, output_folder,
-                                eval_names, missing_values_flag, normalize_flag)
+	biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, min_values, max_values, population,
+		generations, two_points_crossover_probability, arithmetic_crossover_probability,
+		mutation_probability, goal_significances, num_of_folds, output_folder,
+		eval_names, missing_values_flag, normalize_flag)
