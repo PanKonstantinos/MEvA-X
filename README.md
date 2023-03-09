@@ -108,28 +108,31 @@ python MEvA-X_V1.0.0.py
    <td>two_points_crossover_probability</td>
    <td>probability of the offsprings to be produced by the exchange of pieces from the parental individuals</td>
    <td>0.9 (90%)</td>
-   <td>Control what percentage of offspring will be the result of the crossover of its parental chromosomes. The higher the probability, the less conservative the solutions are (dependig on the similarity of the parental solutions). If it is used along with the <code>arithmetic_crossover_probability</code> their sum should not be greater than 1. <i>The recommended values are [0.75-0.95]</i></td>
+   <td>Controls what percentage of offspring will be the result of the crossover of its parental chromosomes. The higher the probability, the less conservative the solutions are (dependig on the similarity of the parental solutions). If it is used along with the <code>arithmetic_crossover_probability</code> their sum should not be greater than 1. <i>The recommended values are [0.75-0.95]</i></td>
   </tr>
   <tr>
    <td>arithmetic_crossover_probability</td>
    <td>probability of an arithmetic crossover of the parental individuals to produce the offsprings</td>
    <td>0.0 (0%)</td>
-   <td>Control what percentage of offspring will be the result of the crossover of its parental chromosomes. The higher the probability, the less conservative the solutions are (dependig on the similarity of the parental solutions). If it is used along with the <code>two_points_crossover_probability</code> their sum should not be greater than 1. <i>The recommended values are [0.0-0.1]</i></td>
+   <td>Controls what percentage of offspring will be the result of the crossover of its parental chromosomes. The higher the probability, the less conservative the solutions are (dependig on the similarity of the parental solutions). If it is used along with the <code>two_points_crossover_probability</code> their sum should not be greater than 1. <i>The recommended values are [0.0-0.1]</i></td>
   </tr>
   <tr>
-    <td>mutation_probability</td>
-    <td>probability of an offspring to mutate</td>
-    <td>0.05 (5%)</td>
+   <td>mutation_probability</td>
+   <td>probability of an offspring to mutate</td>
+   <td>0.05 (5%)</td>
+   <td>Control what percentage of offspring that will experience point mutations after their creation. The higher the probability, the more diverse the new population will be. <i>The recommended values are [0.75-0.95]</i></td>
   </tr>
   <tr>
-    <td>goal_significances_filename</td>
-    <td>array of weights for the objectives</td>
-    <td>array of ones in the length of the objectives</td>
+   <td>goal_significances_filename</td>
+   <td>array of weights for the objectives</td>
+   <td>array of ones in the length of the objectives</td>
+   <td>The weights must be in the form of an array with no labels</i> </td>
   </tr>
  <tr>
-    <td>num_of_folds</td>
-    <td>Number of folds for cross validation</td>
-    <td>10</td>
+   <td>num_of_folds</td>
+   <td>Number of folds for cross validation</td>
+   <td>10</td>
+   <td>The less the number of folds the more data the models are trained in each fold but the less certain we are for the robustness. <i>The recommended values are [5-15]</i> </td>
   </tr>
 </table>
 
