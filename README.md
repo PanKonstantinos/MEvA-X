@@ -75,39 +75,46 @@ python MEvA-X_V1.0.0.py
 <h3>Parameters of the algorithm:</h3>
 <table>
   <tr>
-    <th>Parameter name</th>
-    <th>short description</th>
-    <th>Default value</th>
+   <th>Parameter name</th>
+   <th>Short description</th>
+   <th>Default value</th>
+   <th>Comment</th>
   </tr>
   <tr>
-    <td>Population</td>
-    <td>Number of individuals for the evolutionary algorithm</td>
-    <td>50</td>
+   <td>Population</td>
+   <td>Number of individuals for the evolutionary algorithm</td>
+   <td>50</td>
+   <td>The higher the value the better the space can be explored but the slower the algorithm will get. <i>Advised values: 50-200</i> </td>
   </tr>
   <tr>
-    <td>Generations</td>
-    <td>Number of gererations the evolutionary will run for</td>
-    <td>100</td>
+   <td>Generations</td>
+   <td>Number of gererations the evolutionary will run for</td>
+   <td>100</td>
+   <td>The higher the value the better the further we allow the algorithm to explore, but the slower the algorithm will get overall. <i>Advised values: 50-200</i> </td>
   </tr>
   <tr>
-    <td>dataset_filename</td>
-    <td>Name of the data in the current directory</td>
-    <td><i>None</i></td>
+   <td>dataset_filename</td>
+   <td>Name of the data in the current directory</td>
+   <td><i>None</i></td>
+   <td>The dataset must be in the form of FeaturesXSamples in .txt, .csv, or .tsv format</i> </td>
   </tr>
   <tr>
-    <td>labels_filename</td>
-    <td>Name of the file that contains the labels of the datapoints</td>
-    <td><i>None</i></td>
+   <td>labels_filename</td>
+   <td>Name of the file that contains the labels of the datapoints</td>
+   <td><i>None</i></td>
+   <td>The labels must be in the form of an array with no labels</i> </td>
   </tr>
   <tr>
-    <td>two_points_crossover_probability</td>
-    <td>probability of the offsprings to be produced by the exchange of pieces from the parental individuals</td>
-    <td>0.9 (90%)</td>
+   <td>two_points_crossover_probability</td>
+   <td>probability of the offsprings to be produced by the exchange of pieces from the parental individuals</td>
+   <td>0.9 (90%)</td>
+   <td>Control what percentage of offspring will be the result of the crossover of its parental chromosomes. The higher the probability, the less conservative the solutions are (dependig on the similarity of the parental solutions). If it is used along with the <code>arithmetic_crossover_probability</code> their sum should not be greater than 1. <i>The recommended values are [0.75-0.95]</i></td>
   </tr>
   <tr>
-    <td>arithmetic_crossover_probability</td>
-    <td>probability of an arithmetic crossover of the parental individuals to produce the offsprings</td>
-    <td>0.0 (0%)</td>
+   <td>arithmetic_crossover_probability</td>
+   <td>probability of an arithmetic crossover of the parental individuals to produce the offsprings</td>
+   <td>0.0 (0%)</td>
+   <td>Control what percentage of offspring will be the result of the crossover of its parental chromosomes. The higher the probability, the less conservative the solutions are (dependig on the similarity of the parental solutions). If it is used along with the <code>two_points_crossover_probability</code> their sum should not be greater than 1. <i>The recommended values are [0.0-0.1]</i></td>
   </tr>
   <tr>
     <td>mutation_probability</td>
@@ -127,6 +134,8 @@ python MEvA-X_V1.0.0.py
 </table>
 
 <h3><i>(Comming soon)</i> Example of calling MEvA-X_V2 from terminal:</h3>
+
+`test`
 
 ```
 python MEvA-X.py -K 10 -P 50 -G 200 --dataset my_data.txt --labels my_labels.tsv -FS precalculated_features.csv --output_dir current_folder -cop 0.9 -acp 0 -mp 0.1 -goal_sig_lst 0.8 2 0.8 1 1 0.7 0.7 1 2 0.5 2
