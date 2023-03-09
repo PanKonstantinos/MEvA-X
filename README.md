@@ -62,6 +62,7 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
   </tr>
 </table>
 
+<h1> Tutorial </h1>
 <h2>Example of calling MEvA-X from terminal:</h2>
 
 ```
