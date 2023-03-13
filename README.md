@@ -63,6 +63,8 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
 </table>
 
 <h1> Tutorial </h1>
+<p>A tutorial of how to use the tool in the form of a notebook can be found in the directory <code>Tutorial</code>.<br></p>
+
 <h2>Example of calling MEvA-X from terminal:</h2>
 
 ```
@@ -136,7 +138,6 @@ python MEvA-X_V1.0.0.py
   </tr>
 </table>
 
-<h2>A tutorial of how to use the tool can be found in the directory <code>Tutorial</code>.</h2>
 
 <h3><i>(Comming soon)</i> Example of calling MEvA-X_V2 from terminal:</h3>
 
