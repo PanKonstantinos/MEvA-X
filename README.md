@@ -68,7 +68,10 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
 <h2>Example of calling MEvA-X from terminal:</h2>
 
 ```
+# Calling the general version of the script
 python MEvA-X_V1.0.0.py
+# Calling the script for the OPERA study dataset
+python MEvA-X_V1.0.0_opera.py
 ```
 
 <p>The parameters of the algorithm can be changed directly through the script in the __main__ section for the version V1.0.0.
