@@ -125,7 +125,7 @@ python MEvA-X_V1.0.0_opera.py
    <td>mutation_probability</td>
    <td>probability of an offspring to mutate</td>
    <td>0.05 (5%)</td>
-   <td>Control what percentage of offspring that will experience point mutations after their creation. The higher the probability, the more diverse the new population will be. <i>The recommended values are [0.75-0.95]</i></td>
+   <td>Control what percentage of offspring that will experience point mutations after their creation. The higher the probability, the more diverse the new population will be. <i>The recommended values are [0.03-0.1]</i></td>
   </tr>
   <tr>
    <td>goal_significances_filename</td>
