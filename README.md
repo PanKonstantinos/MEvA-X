@@ -22,7 +22,7 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
   </tr>
   <tr>
     <td>Pandas</td>
-    <td>>1.3.0</td>
+    <td>1.4.4</td>
     <td>https://pypi.org/project/pandas/</td>
   </tr>
   <tr>
