@@ -147,7 +147,7 @@ python MEvA-X_V1.0.0_opera.py
 </table>
 
 
-<h3><i>(Comming soon)</i> Example of calling MEvA-X_V2 from terminal:</h3>
+<h3><i>(Comming soon)</i> Example of calling MEvA-X_V1.2.0 from terminal:</h3>
 <p>This script is up and running but more tests are needed to ensure its robustness.</p>
 
 ```
