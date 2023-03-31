@@ -1,4 +1,4 @@
-
+import argparse
 import random
 import math
 import copy
@@ -1757,28 +1757,61 @@ def picklefy_variables(var,var_name,output_folder):
 		print(f'An error occured while trying to save {var_name} variable')
 
 
+def get_parser():
+    '''
+    This is a helper function to parse the inputs of the user from the command line into the variables used by the algorithm.
+
+    '''
+    # defined command line options
+    # this also generates --help and error handling
+    MEvAX_args = argparse.ArgumentParser(prog='MEvA-X', description='A hybrid algorithm for feature selection, hyper-parameter optimization and model training.\nMEvA-X uses a combination of a Nitched Pareto Evolutionary algorithm and the XGBoost Classifier to achieve the above-mentioned objectives.', epilog='This algorithm is the result of the work of K. Panagiotopoulos, K. Theofilatos, M.A. Deriu, and S.Mavroudi')
+
+    MEvAX_args.add_argument("--dataset_path", "-A",  nargs=1, type=str,  default="data.csv", required=True, dest='dataset_filename', help="[str]: The path to the file containing the data. Format expected: FeaturesXSamples") # "*" -> 0 or more values expected => creates a list
+    MEvAX_args.add_argument("--labels_path",, "-B"  nargs=1, type=str,  default="labels.csv", required=True, dest='labels_filename', help="[str]: The path to the file containing the labels of the data. Sample names should not be used")
+    MEvAX_args.add_argument("--FS_dir",  nargs="*", type=str,  default=None, dest='FS_dir', help="[str]: The path to the directory containing precalculated features from the Feature Selection techniques (mRMR, JMI, Wilcoxon, and SelectKBest)")
+    MEvAX_args.add_argument("--output_dir",  nargs="*", type=str,  default=os.path.join(os.getcwd(),"Results",f"Models_{str(time.time_ns())[:-9]}"), dest='output_folder')
+    MEvAX_args.add_argument("--K",  nargs=1, type=int, default=10, dest='num_of_folds', help="[int]: The number of folds to be used in the K-fold cross validation. Default = 10")
+    MEvAX_args.add_argument("--P",  nargs=1, type=int, default=50, dest='population', help="[int]: The number of individual solutions. Default = 50")
+    MEvAX_args.add_argument("--G",  nargs=1, type=int, default=100, dest='generations', help="[int]: The number of maximum generations for the Evolutionry Algorithm. Default = 100")
+    MEvAX_args.add_argument("--crossover_perc",  nargs=1, type=float, default=0.9, dest='two_points_crossover_probability')
+    MEvAX_args.add_argument("--arithmetic_perc",  nargs=1, type=float, default=0.0, dest='arithmetic_crossover_probability', help="[float]: Probability of a two point crossover for the creation of a new offsping. Default = 100")
+    MEvAX_args.add_argument("--mutation_perc",  nargs=1, type=float, default=0.05, dest='mutation_probability', help="[float]: The probability of point mutations to occure in the genome of an offspring. Default = 0.9")
+    MEvAX_args.add_argument("--goal_sig_path",  nargs=1, type=str, dest='goal_significances_path', help="[str]: The path to the file containing the weights of the evaluation metrics")
+    MEvAX_args.add_argument("--goal_sig_list",  nargs="*", type=list, default=[0.8,0.8,0.8,2,1,1,1,1,2,0.5,2], dest='goal_significances_filename', help="[array-like of floats]: The array of the weights for the evaluation metrics. Default = [0.8,0.8,0.8,2,1,1,1,1,2,0.5,2]")
+    return MEvAX_args
+
 ''' = = = = = = = = = = = = = = = = = = = = = = = = MAIN = = = = = = = = = = = = = = = = = = = = = = = = '''
 
 
 if __name__ == "__main__":
     prog_time = time.time()
-    print("Argument List:", str(sys.argv))
-    print(np.asarray(sys.argv).shape[0])
-    exit()
+    parser = get_parser()
+    args = parser.parse_args()
 
     #-K 10 -P 50 -G 200 --dataset my_data.txt --labels my_labels.tsv -FS precalculated_features.csv --output_dir current_folder -cop 0.9 -acp 0 -mp 0.1 -goal_sig_lst 0.8 2 0.8 1 1 0.7 0.7 1 2 0.5 2
+    dataset_filename = args.dataset_filename[0]
+    labels_filename = args.labels_filename[0]
+    FS_dir = args.FS_dir[0]
+    output_folder = args.output_folder[0]
+    num_of_folds = args.num_of_folds[0]
+    population = args.population[0]
+    generations = args.generations[0]
+    two_points_crossover_probability = args.two_points_crossover_probability[0]
+    arithmetic_crossover_probability = args.arithmetic_crossover_probability[0]
+    mutation_probability = args.mutation_probability[0]
+    goal_significances_filename = np.asarray(args.goal_significances_filename)
 
-    dataset_filename=sys.argv[1]
-    labels_filename=sys.argv[2]
-    population=int(sys.argv[3])
-    generations=int(sys.argv[4])
-    two_points_crossover_probability=float(sys.argv[5])
-    arithmetic_crossover_probability=float(sys.argv[6])
-    mutation_probability=float(sys.argv[7])	
-    goal_significances_filename=sys.argv[8]
-    num_of_folds=int(sys.argv[9])
-    print("Argument List:", str(sys.argv))
-    exit()
+    # dataset_filename=sys.argv[1]
+    # labels_filename=sys.argv[2]
+    # population=int(sys.argv[3])
+    # generations=int(sys.argv[4])
+    # two_points_crossover_probability=float(sys.argv[5])
+    # arithmetic_crossover_probability=float(sys.argv[6])
+    # mutation_probability=float(sys.argv[7])	
+    # goal_significances_filename=sys.argv[8]
+    # num_of_folds=int(sys.argv[9])
+    
+
     #####
     abspath = os.path.abspath(__file__)
     dname = os.path.dirname(abspath)
@@ -1786,22 +1819,6 @@ if __name__ == "__main__":
     #####
     current_dir = os.getcwd()
     FS_dir = os.path.join(current_dir, 'diet/FS_methods/')
-    #dataset_filename = './diet/diet_dataset_batch_effect_removed.txt'
-    #labels_filename = './diet/diet_labels.txt'
-    # ans = input("Running from Google Drive? (Y/N): ")
-    # if ans.upper() in ['Y','YES']:
-        # dataset_filename = '/content/drive/MyDrive/Colab Notebooks/diet_dataset_batch_effect_removed.txt'#/gdrive/My Drive/Colab Notebooks/
-        # labels_filename = '/content/drive/MyDrive/Colab Notebooks/diet_labels.txt'
-    # else:
-        # ans = input("Running locally? (Y/N): ")
-        # if ans.upper() in ['Y','YES']:
-            # dataset_filename = './diet/diet_dataset.txt'
-            # labels_filename = './diet/diet_labels.txt'
-    # # 			dataset_filename = 'C:/Users/kosta/Desktop/Thesis/My_code/diet/diet_dataset.txt'
-    # # 			labels_filename = 'C:/Users/kosta/Desktop/Thesis/My_code/diet/diet_labels.txt'
-        # else:
-            # dataset_filename = os.path.join(os.path.expanduser('~'), 'My_code', 'diet', 'diet_dataset.txt')
-            # labels_filename = os.path.join(os.path.expanduser('~'), 'My_code', 'diet', 'diet_labels.txt')
 
     [dataset, feature_names, sample_names, labels] = preprocessing_function(dataset_filename,labels_filename, as_pandas=True)
 
