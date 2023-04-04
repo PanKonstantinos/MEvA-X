@@ -2,7 +2,10 @@
 An open source biomarker discovery tool based on a multi-objective Evolutionary algorithm and the XGBoost Classifier.
 Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performance of the XGBoost Classifiers improved their overall performance and/or the simplicity of the final models. 
 
-</h2>Details</h2>
+<h2>Flowchart</h2>
+<img src="flowchart_MEvA-X.svg">
+
+<h2>Details</h2>
 <h4>About the algorithm:</h4>
 
  <table>
@@ -67,16 +70,11 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
 
 <h2>Example of calling MEvA-X from terminal:</h2>
 
-
-<h4>Calling the general version of the script</h4>
-
-```
-python MEvA-X_V1.0.0.py
-```
-<h4>Calling the script for the OPERA study dataset</h4>
+<h4>Example of calling MEvA-X from terminal:</h4>
+<p>This script is up and running and there is a detailed tutorial on the directory <code>Tutorial</code>.</p>
 
 ```
-python MEvA-X_V1.0.0_opera.py
+python MEvA-X.py --dataset_path ./Data/Ornish/diet_dataset.txt --labels_path ./Data/Ornish/diet_labels.txt --output_dir ./Data/Ornish/Results --K 5 --G 30 --P 60 --FS_dir ./Data/Ornish/FS_methods --goal_sig_path ./Data/Ornish/metrics_weights.txt --verbose False --plot False
 ```
 
 <p>The parameters of the algorithm can be changed directly through the script in the __main__ section for the version V1.0.0.
@@ -146,10 +144,14 @@ python MEvA-X_V1.0.0_opera.py
   </tr>
 </table>
 
-
-<h3><i>(Comming soon)</i> Example of calling MEvA-X_V1.2.0 from terminal:</h3>
-<p>This script is up and running but more tests are needed to ensure its robustness.</p>
+<h4>Calling the general version of the script</h4>
 
 ```
-python ./beta/MEvA-X_V1.2.0.py -K 10 -P 50 -G 200 --dataset my_data.txt --labels my_labels.tsv -FS precalculated_features.csv --output_dir current_folder -cop 0.9 -acp 0 -mp 0.1 -goal_sig_lst 0.8 2 0.8 1 1 0.7 0.7 1 2 0.5 2
+python MEvA-X_V1.0.0.py
 ```
+<h4>Calling the script for the OPERA study dataset</h4>
+
+```
+python MEvA-X_V1.0.0_opera.py
+```
+
