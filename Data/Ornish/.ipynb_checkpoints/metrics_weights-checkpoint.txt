@@ -1,0 +1,2 @@
+Model_complexity_#features, Accuracy, Model_complexity_#splits, weighted Geometric Mean, F1 score, F2 score, Precision, Recall, AUrocC, Balanced_accuracy, Manhattan distance^-1
+0.8, 0.6, 0.8, 2.0, 1.2, 1.2, 1.0, 1.0, 1.5, 1.8, 0.0

@@ -1,0 +1,96 @@
+Generation 0
+Convergenve = 0.2067093661984391
+Convergence Percentage = 0.32842712799809753
+
+Generation 1
+Convergenve = 0.03366094632735972
+Convergence Percentage = 0.303963854080956
+
+Generation 2
+Convergenve = 0.20319017001759176
+Convergence Percentage = 0.2849270230426427
+
+Generation 3
+Convergenve = 0.21098782430037855
+Convergence Percentage = 0.30179220735876044
+
+Generation 4
+Convergenve = 0.21214455548090383
+Convergence Percentage = 0.29478538088004713
+
+Generation 5
+Convergenve = 0.2006070749393063
+Convergence Percentage = 0.27830307936731746
+
+Generation 6
+Convergenve = 0.22086690288037314
+Convergence Percentage = 0.3062879384607091
+
+Generation 7
+Convergenve = 0.2010729491876947
+Convergence Percentage = 0.27880328267418625
+
+Generation 8
+Convergenve = 0.22572707321278673
+Convergence Percentage = 0.3133150727970207
+
+Generation 9
+Convergenve = 0.193209036523587
+Convergence Percentage = 0.26791476611290055
+
+Generation 10
+Convergenve = 0.18456799854652062
+Convergence Percentage = 0.2557162629703464
+
+Generation 11
+Convergenve = 0.1852249779175118
+Convergence Percentage = 0.26109692403494555
+
+Generation 12
+Convergenve = 0.12427585106555139
+Convergence Percentage = 0.19682446234680834
+
+Generation 13
+Convergenve = 0.023858151629129853
+Convergence Percentage = 0.1126186285158484
+
+Generation 14
+Convergenve = 0.07820776740328872
+Convergence Percentage = 0.25503870447748794
+
+Generation 15
+Convergenve = 0.18633735624148373
+Convergence Percentage = 0.25241709805717677
+
+Generation 16
+Convergenve = 0.2042177826589251
+Convergence Percentage = 0.27676771449081633
+
+Generation 17
+Convergenve = 0.12059884974974577
+Convergence Percentage = 0.18558365042377323
+
+Generation 18
+Convergenve = 0.10780697114360038
+Convergence Percentage = 0.16749527406351314
+
+Generation 19
+Convergenve = 0.18307821782026246
+Convergence Percentage = 0.2568469963996103
+
+Generation 20
+Convergenve = 0.13424518881277403
+Convergence Percentage = 0.2308240791873714
+
+Generation 21
+Convergenve = 0.16242789329339036
+Convergence Percentage = 0.22616174515454512
+
+Generation 22
+Convergenve = 0.1541058904587772
+Convergence Percentage = 0.22250930899140828
+
+Generation 23
+Convergenve = 0.1711336350569661
+Convergence Percentage = 0.24204876896144514
+

@@ -1,0 +1,242 @@
+Time to run CV: 6.885140657424927
+Generation: 0
+Pareto frontier operation took: 0.004019737243652344
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.0381016731262207
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+Preparation_for_crossover_time = 0.004010200500488281
+Cross over time = 0.004507541656494141
+Mutation took = 0.015559911727905273
+Time to run CV: 8.002368927001953
+Generation: 1
+Pareto frontier operation took: 0.004006147384643555
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.024093151092529297
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+Preparation_for_crossover_time = 0.004019260406494141
+Cross over time = 0.004025697708129883
+Mutation took = 0.015533208847045898
+Time to run CV: 7.3734130859375
+Generation: 2
+Pareto frontier operation took: 0.004004955291748047
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.036579132080078125
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+Preparation_for_crossover_time = 0.0039997100830078125
+Cross over time = 0.002544879913330078
+Mutation took = 0.017602205276489258
+Time to run CV: 7.569443702697754
+Generation: 3
+Pareto frontier operation took: 0.0043485164642333984
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.03607916831970215
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.00600743293762207
+Mutation took = 0.014043807983398438
+Time to run CV: 8.108103275299072
+Generation: 4
+Pareto frontier operation took: 0.0040171146392822266
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.033681392669677734
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Preparation_for_crossover_time = 0.005009651184082031
+Cross over time = 0.006375789642333984
+Mutation took = 0.011048555374145508
+Time to run CV: 7.830004930496216
+Generation: 5
+Pareto frontier operation took: 0.0
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.05855369567871094
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.00858163833618164
+Mutation took = 0.011327266693115234
+Time to run CV: 8.350823879241943
+Generation: 6
+Pareto frontier operation took: 0.009046792984008789
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.03638911247253418
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.007010221481323242
+Mutation took = 0.014095783233642578
+Time to run CV: 7.524317264556885
+Generation: 7
+Pareto frontier operation took: 0.006273508071899414
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.04393815994262695
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.008044958114624023
+Mutation took = 0.008524179458618164
+Time to run CV: 7.709768056869507
+Generation: 8
+Pareto frontier operation took: 0.003997802734375
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.040178537368774414
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.006539344787597656
+Mutation took = 0.00905609130859375
+Time to run CV: 7.6041858196258545
+Generation: 9
+Pareto frontier operation took: 0.004004240036010742
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.04377293586730957
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+Preparation_for_crossover_time = 0.004003286361694336
+Cross over time = 0.004025936126708984
+Mutation took = 0.012017011642456055
+Time to run CV: 7.096573352813721
+Generation: 10
+Pareto frontier operation took: 0.004074811935424805
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.043709754943847656
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+Preparation_for_crossover_time = 0.0020194053649902344
+Cross over time = 0.002053499221801758
+Mutation took = 0.012031793594360352
+Time to run CV: 7.337987899780273
+Generation: 11
+Pareto frontier operation took: 0.004019737243652344
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.03770804405212402
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+Preparation_for_crossover_time = 0.002012014389038086
+Cross over time = 0.008005380630493164
+Mutation took = 0.015533924102783203
+Time to run CV: 7.236255884170532
+Generation: 12
+Pareto frontier operation took: 0.004019737243652344
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.035968780517578125
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Preparation_for_crossover_time = 0.002002716064453125
+Cross over time = 0.002040863037109375
+Mutation took = 0.01205897331237793
+Time to run CV: 7.454015731811523
+Generation: 13
+Pareto frontier operation took: 0.00400233268737793
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.043845415115356445
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8]
+Preparation_for_crossover_time = 0.004019737243652344
+Cross over time = 0.003985404968261719
+Mutation took = 0.012042045593261719
+Time to run CV: 7.403841733932495
+Generation: 14
+Pareto frontier operation took: 0.0044400691986083984
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.03527235984802246
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.009018421173095703
+Mutation took = 0.013562202453613281
+Time to run CV: 7.2936320304870605
+Generation: 15
+Pareto frontier operation took: 0.0030193328857421875
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.0513453483581543
+# of fronts:[1, 2, 3, 4, 5, 6, 7]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.007263660430908203
+Mutation took = 0.012063264846801758
+Time to run CV: 7.196377754211426
+Generation: 16
+Pareto frontier operation took: 0.004019260406494141
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.052266597747802734
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.004178762435913086
+Mutation took = 0.012079238891601562
+Time to run CV: 7.714073181152344
+Generation: 17
+Pareto frontier operation took: 0.0
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.05185413360595703
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.00850987434387207
+Mutation took = 0.011535167694091797
+Time to run CV: 7.902538061141968
+Generation: 18
+Pareto frontier operation took: 0.0030128955841064453
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.0381617546081543
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9]
+Preparation_for_crossover_time = 0.002001523971557617
+Cross over time = 0.0065097808837890625
+Mutation took = 0.014521598815917969
+Time to run CV: 7.693747520446777
+Generation: 19
+Pareto frontier operation took: 0.003000020980834961
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.062497615814208984
+# of fronts:[1, 2, 3, 4, 5]
+Preparation_for_crossover_time = 0.0009996891021728516
+Cross over time = 0.00500035285949707
+Mutation took = 0.010509490966796875
+Time to run CV: 7.67848801612854
+Generation: 20
+Pareto frontier operation took: 0.004006862640380859
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.04448533058166504
+# of fronts:[1, 2, 3, 4, 5, 6]
+Preparation_for_crossover_time = 0.004004955291748047
+Cross over time = 0.0035054683685302734
+Mutation took = 0.012102603912353516
+Time to run CV: 7.974014759063721
+Generation: 21
+Pareto frontier operation took: 0.004018545150756836
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.04423236846923828
+# of fronts:[1, 2, 3, 4, 5, 6, 7]
+Preparation_for_crossover_time = 0.003506898880004883
+Cross over time = 0.0040056705474853516
+Mutation took = 0.012064218521118164
+Time to run CV: 7.698086500167847
+Generation: 22
+Pareto frontier operation took: 0.0
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.05998873710632324
+# of fronts:[1, 2, 3, 4, 5]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.008504867553710938
+Mutation took = 0.009540319442749023
+Time to run CV: 7.599681615829468
+Generation: 23
+Pareto frontier operation took: 0.0040051937103271484
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.061937570571899414
+# of fronts:[1, 2, 3, 4, 5]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.0075070858001708984
+Mutation took = 0.012042045593261719
+Time to run CV: 7.918158054351807
+Generation: 24
+Pareto frontier operation took: 0.004019975662231445
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.045279741287231445
+# of fronts:[1, 2, 3, 4, 5, 6, 7]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.006012678146362305
+Mutation took = 0.010919570922851562
+Time to run CV: 7.939505100250244
+Generation: 25
+Pareto frontier operation took: 0.0
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.06789946556091309
+# of fronts:[1, 2, 3, 4, 5, 6]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.007570981979370117
+Mutation took = 0.012045621871948242
+Time to run CV: 7.62000036239624
+Generation: 26
+Pareto frontier operation took: 0.003628969192504883
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.05216813087463379
+# of fronts:[1, 2, 3, 4, 5, 6, 7]
+Preparation_for_crossover_time = 0.004004001617431641
+Cross over time = 0.0040264129638671875
+Mutation took = 0.016055583953857422
+Time to run CV: 8.107945919036865
+Generation: 27
+Pareto frontier operation took: 0.0020198822021484375
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.0559234619140625
+# of fronts:[1, 2, 3, 4, 5, 6, 7]
+Preparation_for_crossover_time = 0.0020537376403808594
+Cross over time = 0.004005908966064453
+Mutation took = 0.016092538833618164
+Time to run CV: 8.069753885269165
+Generation: 28
+Pareto frontier operation took: 0.004027366638183594
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.04799938201904297
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9]
+Preparation_for_crossover_time = 0.0039784908294677734
+Cross over time = 0.005977630615234375
+Mutation took = 0.014449834823608398
+Time to run CV: 8.351840257644653
+Generation: 29
+Pareto frontier operation took: 0.0020084381103515625
+Calculating the similarities of Niches / pareto frontiers (m) took: 0.03968930244445801
+# of fronts:[1, 2, 3, 4, 5, 6, 7, 8, 9]
+Preparation_for_crossover_time = 0.0
+Cross over time = 0.008126258850097656
+Mutation took = 0.012039661407470703
+Time to run CV: 7.702174186706543
+Program ended in : 243.5 seconds or 4.058 minutes
