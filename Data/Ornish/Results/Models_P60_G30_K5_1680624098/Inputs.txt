@@ -1,0 +1,7 @@
+cwd: C:\Users\UTENTE\Desktop\meva_git\MEvA-X
+dataset file: ./Data/Ornish/diet_dataset.txt
+labels file: ./Data/Ornish/diet_labels.txt
+Number of parameters: 11
+Population: 60
+Generations: 30
+k-folds: 5

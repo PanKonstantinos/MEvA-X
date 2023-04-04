@@ -1,0 +1,206 @@
+indiv 0
+['ZNF343']
+indiv 1
+['ZNF343']
+indiv 19
+['ZNF343']
+indiv 33
+['ZNF343']
+indiv 39
+['ZNF343']
+indiv 43
+['ALDH6A1', 'ASCC3', 'BST1', 'HIP1']
+indiv 50
+['ZNF343']
+indiv 51
+['AMN', 'NUP107', 'SLC25A30']
+indiv 56
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 1
+['ZNF343']
+indiv 14
+['AKIRIN1', 'ALOX15', 'API5', 'CD1C', 'COQ7', 'CPOX', 'CSN3', 'CSNK1D', 'ERV9-1', 'EWSR1', 'GRAMD1C', 'KRT20', 'LOC102725016', 'MAB21L2', 'RPS27A', 'SMARCB1', 'SSX2B', 'STAG1', 'TMEM127', 'TXNL4A', 'ZNF576']
+indiv 18
+['CORO1C']
+indiv 19
+['ZNF343']
+indiv 33
+['ZNF343']
+indiv 39
+['ZNF343']
+indiv 50
+['ZNF343']
+indiv 51
+['AMN', 'NUP107', 'SLC25A30']
+indiv 54
+['BGN', 'CD1C', 'CLIP2', 'NECAP2', 'OAZ3', 'PARP3', 'PSMD6', 'PYCRL', 'TOR1B']
+indiv 56
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 1
+['ZNF343']
+indiv 14
+['AKIRIN1', 'ALOX15', 'API5', 'CD1C', 'COQ7', 'CPOX', 'CSN3', 'CSNK1D', 'ERV9-1', 'EWSR1', 'GRAMD1C', 'KRT20', 'LOC102725016', 'MAB21L2', 'RPS27A', 'SMARCB1', 'SSX2B', 'STAG1', 'TMEM127', 'TXNL4A', 'ZNF576']
+indiv 19
+['ZNF343']
+indiv 22
+['ARL6IP5', 'KRT3', 'MAD2L1', 'MDM2', 'STAG1']
+indiv 33
+['ZNF343']
+indiv 35
+['PORCN', 'SLC25A30']
+indiv 39
+['ZNF343']
+indiv 50
+['ZNF343']
+indiv 52
+['AKIRIN1', 'API5', 'CHAT', 'COX20', 'EIF4E2', 'LOC102725016', 'MAB21L2', 'PI4KA', 'RBM12', 'RCVRN', 'RPS27A', 'SEMA5A', 'SMARCB1', 'STAG1', 'TMEM127']
+indiv 53
+['ALDH6A1', 'ASCC3', 'BST1']
+indiv 56
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 1
+['ZNF343']
+indiv 5
+['AKIRIN1', 'CHAT', 'DRAP1', 'LOC102725016', 'MAB21L2', 'PI4KA', 'RBM12', 'RPS27A', 'SMARCB1', 'STAG1', 'TMEM127']
+indiv 9
+['CACNB4', 'PRO2012', 'SELL']
+indiv 19
+['ZNF343']
+indiv 33
+['ZNF343']
+indiv 35
+['PORCN', 'SLC25A30']
+indiv 39
+['ZNF343']
+indiv 43
+['ALDH6A1', 'ASCC3', 'BST1', 'HIP1']
+indiv 50
+['ZNF343']
+indiv 51
+['AMN', 'NUP107', 'SLC25A30']
+indiv 53
+['ALDH6A1', 'ASCC3', 'BST1']
+indiv 56
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 1
+['ZNF343']
+indiv 14
+['AKIRIN1', 'ALOX15', 'API5', 'CD1C', 'COQ7', 'CPOX', 'CSN3', 'CSNK1D', 'ERV9-1', 'EWSR1', 'GRAMD1C', 'KRT20', 'LOC102725016', 'MAB21L2', 'RPS27A', 'SMARCB1', 'SSX2B', 'STAG1', 'TMEM127', 'TXNL4A', 'ZNF576']
+indiv 19
+['ZNF343']
+indiv 33
+['ZNF343']
+indiv 39
+['ZNF343']
+indiv 43
+['ALDH6A1', 'ASCC3', 'BST1', 'HIP1']
+indiv 50
+['ZNF343']
+indiv 51
+['AMN', 'NUP107', 'SLC25A30']
+indiv 52
+['AKIRIN1', 'API5', 'CHAT', 'COX20', 'EIF4E2', 'LOC102725016', 'MAB21L2', 'PI4KA', 'RBM12', 'RCVRN', 'RPS27A', 'SEMA5A', 'SMARCB1', 'STAG1', 'TMEM127']
+indiv 54
+['BGN', 'CD1C', 'CLIP2', 'NECAP2', 'OAZ3', 'PARP3', 'PSMD6', 'PYCRL', 'TOR1B']
+indiv 56
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 52
+['AKIRIN1', 'API5', 'CHAT', 'COX20', 'EIF4E2', 'LOC102725016', 'MAB21L2', 'PI4KA', 'RBM12', 'RCVRN', 'RPS27A', 'SEMA5A', 'SMARCB1', 'STAG1', 'TMEM127']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']
+indiv 0
+['ZNF343']

@@ -1,0 +1,90 @@
+Gen0:
+Overall: 12	AUC: 9	bAcc: 12
+
+Gen1:
+Overall: 4	AUC: 58	bAcc: 4
+
+Gen2:
+Overall: 0	AUC: 15	bAcc: 0
+
+Gen3:
+Overall: 0	AUC: 45	bAcc: 14
+
+Gen4:
+Overall: 0	AUC: 42	bAcc: 4
+
+Gen5:
+Overall: 0	AUC: 13	bAcc: 0
+
+Gen6:
+Overall: 0	AUC: 38	bAcc: 0
+
+Gen7:
+Overall: 0	AUC: 45	bAcc: 0
+
+Gen8:
+Overall: 0	AUC: 43	bAcc: 54
+
+Gen9:
+Overall: 0	AUC: 14	bAcc: 3
+
+Gen10:
+Overall: 0	AUC: 30	bAcc: 0
+
+Gen11:
+Overall: 0	AUC: 24	bAcc: 0
+
+Gen12:
+Overall: 0	AUC: 11	bAcc: 0
+
+Gen13:
+Overall: 57	AUC: 39	bAcc: 0
+
+Gen14:
+Overall: 52	AUC: 16	bAcc: 45
+
+Gen15:
+Overall: 0	AUC: 7	bAcc: 0
+
+Gen16:
+Overall: 0	AUC: 14	bAcc: 2
+
+Gen17:
+Overall: 0	AUC: 51	bAcc: 0
+
+Gen18:
+Overall: 0	AUC: 0	bAcc: 0
+
+Gen19:
+Overall: 17	AUC: 55	bAcc: 17
+
+Gen20:
+Overall: 26	AUC: 3	bAcc: 21
+
+Gen21:
+Overall: 0	AUC: 58	bAcc: 7
+
+Gen22:
+Overall: 0	AUC: 0	bAcc: 53
+
+Gen23:
+Overall: 7	AUC: 31	bAcc: 7
+
+Gen24:
+Overall: 2	AUC: 31	bAcc: 2
+
+Gen25:
+Overall: 24	AUC: 57	bAcc: 24
+
+Gen26:
+Overall: 0	AUC: 46	bAcc: 0
+
+Gen27:
+Overall: 10	AUC: 36	bAcc: 0
+
+Gen28:
+Overall: 39	AUC: 59	bAcc: 39
+
+Gen29:
+Overall: 12	AUC: 44	bAcc: 12
+
