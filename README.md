@@ -150,6 +150,7 @@ python MEvA-X.py --dataset_path ./Data/Ornish/diet_dataset.txt --labels_path ./D
 python MEvA-X_V1.0.0.py
 ```
 <h4>Calling the script for the OPERA study dataset</h4>
+<p>It has minor differences on the way it reads the data, because the OPERA labels file contains the name of each samlpe as headers.</p>
 
 ```
 python MEvA-X_V1.0.0_opera.py
