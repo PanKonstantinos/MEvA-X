@@ -17,11 +17,12 @@ from sklearn.utils import shuffle
 from sklearn.metrics import balanced_accuracy_score, multilabel_confusion_matrix, confusion_matrix
 from sklearn.metrics import accuracy_score, fbeta_score, precision_recall_fscore_support, roc_auc_score
 from sklearn.metrics import roc_curve, auc
-from sklearn.metrics.pairwise import manhattan_distances
+#from sklearn.metrics.pairwise import manhattan_distances
 from scipy.stats import ranksums
 from sklearn.ensemble import VotingClassifier
 import os
 import mifs
+from scipy.spatial.distance import cityblock
 
 class Individual():
     """
@@ -364,6 +365,8 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
         metrics_array_hard.append([])
 
         pickle.dump(dict_of_k_fold_pred, open(output_folder+'Dictionary_of_predictions.pkl', "wb"))
+        pickle.dump(mdls, open(output_folder+'/Pareto_1_results/Models/Models.pkl', "wb"))
+
 
         MJV_soft_predictions = np.asarray(pareto_results_soft).mean(axis=0)
         MJV_hard_predictions = np.asarray(pareto_results_hard).mean(axis=0)
@@ -461,7 +464,10 @@ def mertics_calculator(y_true, y_pred_proba, avg='weighted'):
     scores['f2_score'] = fbeta_score(y_true, y_pred, beta = 2.0, average=avg, zero_division = 0) # F2_weighted = 1.0
     scores['Precision'], scores['Recall'], scores['f1_score'], _ = precision_recall_fscore_support(y_true, y_pred, average=avg,zero_division = 0)
     scores['roc_auc'] = roc_auc_score(y_true, y_pred_proba, average = avg) # Roc_auc = 0
-    scores['manhattan_distance'] = manhattan_distances(y_true.reshape(1,-1), y_pred.reshape(1,-1), sum_over_features=True).squeeze()# Manhattan Distance = 3.5
+    scores['manhattan_distance'] = cityblock(y_true.reshape(1,-1), y_pred.reshape(1,-1))
+    ## old version with Manhattan Distance from sklearn pairwise
+    # manhattan_distances(y_true.reshape(1,-1), y_pred.reshape(1,-1), sum_over_features=True).squeeze()# Manhattan Distance = 3.5
+
     ''' Metric not used
     scores['IBA'] = IBA(dtrain = y_true, predt = y_pred)[1]
     '''
