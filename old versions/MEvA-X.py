@@ -76,7 +76,7 @@ class Individual():
                         'gamma':self.individual[6], 'lambda':self.individual[7],
                         'alpha':self.individual[8], 'min_child_weight':self.individual[9],
                         'scale_pos_weight':self.individual[10],
-                        'nthread':mp.cpu_count(),'objective':'binary:logistic', 'eval_metric':['auc']}
+                        'nthread':2,'objective':'binary:logistic', 'eval_metric':['auc']}
                         #'colsample_bytree':self.individual[11],'subsample':self.individual[12],\
             if self.multiclass==True:
                 xgb_params['objective']='multi:softmax'
@@ -330,8 +330,8 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
         mdls = list()
         prds = list()
         dict_of_preds = {}
-        for ii, p1_indx in enumerate(index):
-            feat_sel_indx = filter_mask[p1_indx, parameters:]
+        for ii,p1_indx in enumerate(index):
+            feat_sel_indx = filter_mask[p1_indx,parameters:]
 
             deval = xgb.DMatrix(testing_inputs[:,feat_sel_indx], label = testing_outputs)
             mdl = Individual(individuals[p1_indx], p1_indx, training_inputs[:,feat_sel_indx],  training_outputs, num_of_folds, filter_mask[p1_indx], multiclass, verbose=verbose).training_best(N_trees[index][ii])
@@ -350,16 +350,12 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
             p1_fnames.append(feat_sel_names.tolist())
             prds.append(predictions)
 
-            if not os.path.exists(output_folder + '/Pareto_1_results/Majority vote/Votes/'):
-                os.makedirs(output_folder + '/Pareto_1_results/Majority vote/Votes/')
-            with open(output_folder+'/Pareto_1_results/Majority vote/Votes/names_of_features.txt','a') as votes_file:
-                if ii == 1:
-                    votes_file.write(f'{par_type}\n')
+            with open(output_folder+'names_of_features.txt','a') as votes_file:
                 votes_file.write(f'indiv {p1_indx}\n{feat_sel_names.tolist()}\n')
-            # with open(output_folder+'votes.txt','a') as votes_file:
-            #     votes_file.write(f'indiv {p1_indx}\t{predictions}\n')
-            # with open(output_folder+'votes_hard.txt','a') as votes_file:
-            #     votes_file.write(f'indiv {p1_indx}\t{predictions.round()}\n')
+            with open(output_folder+'votes.txt','a') as votes_file:
+                votes_file.write(f'indiv {p1_indx}\t{predictions}\n')
+            with open(output_folder+'votes_hard.txt','a') as votes_file:
+                votes_file.write(f'indiv {p1_indx}\t{predictions.round()}\n')
             #print(predictions)
             pareto_results_soft.append(predictions)
             pareto_results_hard.append(predictions.round())
@@ -368,15 +364,14 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
         metrics_array_soft.append([])
         metrics_array_hard.append([])
 
-        pickle.dump(dict_of_k_fold_pred, open(output_folder + 'Pareto_1_results/Dictionary_of_predictions.pkl', "wb"))
-        pickle.dump(mdls, open(output_folder + '/Pareto_1_results/Models/Models.pkl', "wb"))
+        pickle.dump(dict_of_k_fold_pred, open(output_folder+'Dictionary_of_predictions.pkl', "wb"))
+        pickle.dump(mdls, open(output_folder+'/Pareto_1_results/Models/Models.pkl', "wb"))
 
 
         MJV_soft_predictions = np.asarray(pareto_results_soft).mean(axis=0)
         MJV_hard_predictions = np.asarray(pareto_results_hard).mean(axis=0)
 
         fpr, tpr, threshold = roc_curve(testing_outputs, MJV_soft_predictions)
-        
         roc_auc = auc(fpr, tpr)
         fpr_tpr_array_soft.append((fpr, tpr, threshold, roc_auc))
         fpr_array_soft.append(fpr)
@@ -392,6 +387,8 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
 
         metrics_array_soft[i].append(accuracy_score(deval.get_label(),MJV_soft_predictions.round())) #1 Accuracy
         metrics_array_hard[i].append(accuracy_score(deval.get_label(),MJV_hard_predictions.round())) #1 Accuracy
+
+
 
         metrics_array_soft[i].append(weighted_geometric_mean(deval.get_label(),MJV_soft_predictions.round(),np.unique(labels))) #3 wGM
         metrics_array_hard[i].append(weighted_geometric_mean(deval.get_label(),MJV_hard_predictions.round(),np.unique(labels))) #3 wGM
@@ -426,11 +423,9 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
 
         i+=1
 
-    if not os.path.exists(output_folder + 'Pareto_1_results/Majority vote'):
-            os.makedirs(output_folder + 'Pareto_1_results/Majority vote')
 
-    pd.DataFrame({'fpr':fpr_array_soft,'tpr':tpr_array_soft,'auc':auc_array_soft}).to_csv(f"{output_folder}Pareto_1_results/Majority vote/fpr_tpr_DataFrame_soft_{par_type}.csv")
-    pd.DataFrame({'fpr':fpr_array_hard,'tpr':tpr_array_hard,'auc':auc_array_hard}).to_csv(f"{output_folder}Pareto_1_results/Majority vote/fpr_tpr_DataFrame_hard_{par_type}.csv")
+    pd.DataFrame({'fpr':fpr_array_soft,'tpr':tpr_array_soft,'auc':auc_array_soft}).to_csv(f"{output_folder}fpr_tpr_DataFrame_soft_{par_type}.csv")
+    pd.DataFrame({'fpr':fpr_array_hard,'tpr':tpr_array_hard,'auc':auc_array_hard}).to_csv(f"{output_folder}fpr_tpr_DataFrame_hard_{par_type}.csv")
 
 
     #USE THE metrics_array TO CALCULATE STDV & MEAN!
@@ -448,13 +443,14 @@ def majority_voting(individuals, dataset, labels, filter_mask, index, num_of_fol
         print('The hard Majority vote returns:')
         for ii in range(mean_array_hard.shape[0]):
             print('%s: %.3f ± %.3f\n' % (names_list[ii], mean_array_hard[ii], stdv_array_hard[ii]))
-    
+
+
     soft = np.vstack([mean_array_soft, stdv_array_soft]).T
     hard = np.vstack([mean_array_hard, stdv_array_hard]).T
     majority_vote_df_soft = pd.DataFrame(soft,columns=["Mean","std"], index=names_list)
     majority_vote_df_hard = pd.DataFrame(hard,columns=["Mean","std"], index=names_list)
-    majority_vote_df_soft.to_csv(f'{output_folder}Pareto_1_results/Majority vote/Majority_Voting_soft_{par_type}_metrics.csv')
-    majority_vote_df_hard.to_csv(f'{output_folder}Pareto_1_results/Majority vote/Majority_Voting_hard_{par_type}_metrics.csv')
+    majority_vote_df_soft.to_csv(f'{output_folder}Majority_Voting_soft_{par_type}.csv')
+    majority_vote_df_hard.to_csv(f'{output_folder}Majority_Voting_hard_{par_type}.csv')
     #print(p1_fnames)
     if verbose:
         print(np.unique(p1_fnames))
@@ -772,7 +768,7 @@ def evaluate_individuals(dataset, labels, individuals, goal_significances, num_o
 
     eval_time_stop = time.time()
     if verbose: print(f'Time to run CV: {eval_time_stop-eval_time_start}')
-    with open(output_folder + 'timing.txt','a') as time_file:
+    with open(output_folder+'timing.txt','a') as time_file:
             time_file.write(f'Time to run CV: {eval_time_stop-eval_time_start}\n')
 
     # Convert the results to numpy array for easier handling
@@ -834,14 +830,14 @@ def create_different_classification_problems(labels, unique_labels):
             number_of_classification_problems += 1
     return classification_problems
 
-def Wilcoxon_ranksums(dataset, classification_problems):
+def Wilcoxon_ranksums(dataset_normalized, classification_problems):
     '''l=len(individuals[ind])-parameters'''
     print('Calculating Wilcoxon ranksums')
     try:
-        dataset = dataset.values.copy()
+        dataset_normalized = dataset_normalized.values.copy()
     except:
-        print('The dataset is not Pandas.DataFrame')
-    l = dataset.shape[0]
+        print('Dataset_normalized is not Pandas.DataFrame')
+    l = dataset_normalized.shape[0]
     selected = np.zeros(l)
     for feature in range(l):
         for i in range(len(classification_problems)):
@@ -850,13 +846,13 @@ def Wilcoxon_ranksums(dataset, classification_problems):
 
             data1=list()
             data2=list()
-            for j in range(len(dataset[0])):
+            for j in range(len(dataset_normalized[0])):
                 if int(classification_problems[i,j])==1:
-                    if (float(dataset[feature,j])!=-1000):
-                        data1.append(dataset[feature,j])
+                    if (float(dataset_normalized[feature,j])!=-1000):
+                        data1.append(dataset_normalized[feature,j])
                 elif int(classification_problems[i,j])==-1:
-                    if (float(dataset[feature,j])!=-1000):
-                        data2.append(dataset[feature,j])
+                    if (float(dataset_normalized[feature,j])!=-1000):
+                        data2.append(dataset_normalized[feature,j])
             if len(data1)>1 and len(data2)>1:
                 [z,pvalue] = ranksums(data1,data2)
                 if pvalue<0.05:
@@ -1063,7 +1059,7 @@ def similarity_function(fronts, evaluation_values, individuals, sigma_share, max
         dist_mat = np.zeros([ind.shape[0],ind.shape[0]],dtype = 'float') #  distance matrix of individuals belonging in the same frontier
 
         front_max_eval = np.max(evaluation_values_f[:-1,ind], axis = 1)
-        with open(output_folder + 'Evolutionary process/Pareto_highest_values.txt','a') as front_max_file:
+        with open(output_folder+'Pareto_highest_values.txt','a') as front_max_file:
             front_max_file.write(f'Pareto: {front} \n {front_max_eval}\n\n')
 
         for j in range(ind.shape[0]): # 0,1,2,3,4 (e.g. len(ind) = 5)
@@ -1106,7 +1102,7 @@ def similarity_function_rounded(fronts, evaluation_values, individuals, sigma_sh
         ind = np.argwhere(fronts == front).ravel()
         dist_mat = np.zeros([ind.shape[0],ind.shape[0]],dtype = 'float') #  distance matrix of individuals belong in the same frontier
         front_max_eval = np.max(evaluation_values_f[:-1,ind], axis = 1)
-        with open(output_folder + 'Evolutionary process/Pareto_highest_values.txt','a') as front_max_file:
+        with open(output_folder+'Pareto_highest_values.txt','a') as front_max_file:
             front_max_file.write(f'Pareto: {front} \n {front_max_eval}\n\n')
         for j in range(ind.shape[0]): # 0,1,2,3,4 (e.g. len(ind) = 5)
             m = 0
@@ -1161,15 +1157,11 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
     for rep in range(generations):
         if verbose: print(f'Generation {rep}')
         out_vars = []#dummy_variable = []
-        out_vars2 = []
         for gene in individuals:
             out_vars.append(np.argwhere(gene[parameters:]>0.5).ravel())
-            out_vars2.append(np.argwhere(gene>0.5).ravel())
-        if verbose: 
-            print(f'Individual_0 has the following feature positions selected: {out_vars[0]}')
-            print(f'Individual_0 has the following features selected: {feature_names[out_vars[0]]}')
+        if verbose: print(f'Individual_0 has the following features selected: {out_vars[0]}')
 
-        with open(output_folder + 'Evolutionary process/Selected Features.txt','a') as feature_position_file:
+        with open(output_folder + 'Selected Features.txt','a') as feature_position_file:
             feature_position_file.write(f'Generation {rep}:\n')
             for i in range(len(out_vars)):
                 if out_vars[i].shape[0]==0:
@@ -1177,15 +1169,6 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
                 else:
                     feature_position_file.write(f'Indiv_{i} -> {out_vars[i]}\n')
             feature_position_file.write('-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\n\n')
-        
-        with open(output_folder + 'Evolutionary process/Selected Feature Names.txt','a') as feature_names_file:
-            feature_names_file.write(f'Generation {rep}:\n')
-            for i in range(len(out_vars)):
-                if out_vars[i].shape[0]==0:
-                    feature_names_file.write(f'Indiv_{i} -> None\n')
-                else:
-                    feature_names_file.write(f'Indiv_{i} -> {feature_names[out_vars[i]]}\n')
-            feature_names_file.write('-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\n\n')
 
 
         #evaluate the population of solutions
@@ -1219,20 +1202,20 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
         except:
             max_eval = evaluation_values[-1][best_indiv_pos]
 
-        with open(output_folder+'Evolutionary process/Index_of_best_individuals_per_metric.txt','a') as f:
+        with open(output_folder+'Index_of_best_individuals_per_metric.txt','a') as f:
             f.write(f'Gen{rep}:\nOverall: {best_overall_indiv_pos}\tAUC: {best_auc_indiv_pos}\tbAcc: {best_bAcc_indiv_pos}\n\n')
 
         max_eval_per_generation[rep]=max_eval
-        with open(output_folder+"Evolutionary process/CV_best_performance.txt",'a') as bst_perf:
+        with open(output_folder+"CV_best_performance.txt",'a') as bst_perf:
             bst_perf.write(str(max_eval_per_generation[rep])+"\n")
 
         average_eval = evaluation_values[:-1].mean()
         average_eval_per_generation[rep] = average_eval
-        with open(output_folder + "Evolutionary process/CV_average_performance.txt",'a') as avg_perf:
+        with open(output_folder+"CV_average_performance.txt",'a') as avg_perf:
             avg_perf.write(str(average_eval_per_generation[rep])+"\n")
         #average_performance_fid.write(str(average_eval_per_generation[rep])+"\n")
 
-        with open(output_folder + 'Evolutionary process/Best_solutions_metrics.txt','a') as best_evals:
+        with open(output_folder+'Best_solutions_metrics.txt','a') as best_evals:
             best_evals.write(f'Generation: {rep}\n')
             for i in range(eval_names.shape[0]):
                 best_evals.write(str(eval_names[i])+':\t'+str(mean_std_list[best_indiv_pos][i][0])+u" \u00B1 "+str(mean_std_list[best_indiv_pos][i][1])+'\n')
@@ -1240,7 +1223,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
         #########
 
-        with open(output_folder+'Evolutionary process/Overall_score_mean_std_per_generation.txt','a') as mean_std_file:
+        with open(output_folder+'Overall_score_mean_std_per_generation.txt','a') as mean_std_file:
             for i,element in enumerate(mean_std_list[best_indiv_pos]):
                 mean_std_file.write(f'{str(eval_names[i])}: {element[0]}'+u" \u00B1 "+f'{element[-1]}'+'\n')
             mean_std_file.write('\n')
@@ -1279,17 +1262,17 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
             ax.legend(loc="lower right", prop={'size': 6})
             plt.tight_layout()
-            plt.savefig(output_folder+f'Evolutionary process/{rep}_ROC.png',dpi=600)
+            plt.savefig(output_folder+f'{rep}_ROC.png',dpi=600)
             plt.close()
 
         ##############
 
-        with open(output_folder+'Evolutionary process/Avg_solutions_metrics.txt','a') as avg_evals:
+        with open(output_folder+'Avg_solutions_metrics.txt','a') as avg_evals:
             avg_evals.write(f'Generation: {rep}\n')
             for i in range(eval_names.shape[0]):
                 avg_evals.write(str(eval_names[i])+':\t'+str(evaluation_values[i].mean())+u" \u00B1 "+str(np.std(evaluation_values[i]))+'\n')
                 #avg_evals.write(str(eval_names[i])+':\t'+str(evaluation_values[i].mean())+'\n')
-            avg_evals.write('Evolutionary process/Unweighted overall :\t'+str(evaluation_values[:-1].mean())+'\n\n')
+            avg_evals.write('Unweighted overall :\t'+str(evaluation_values[:-1].mean())+'\n\n')
 
 
         average_performance = evaluation_values[:-1].mean()#np.average(evaluation_values[-1,:])
@@ -1299,10 +1282,10 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
         if average_performance == 0:
             if verbose: print("Convergence Percentage is impossible to calculate because average_performance = 0")
         else:
-            if verbose: print(f'Evolutionary process/Average performance: {average_performance}')
+            if verbose: print(f'Average performance: {average_performance}')
 
         #Convergence criterion is checked in order to stop the evolution if the population is deemd us converged
-        with open(output_folder + 'Evolutionary process/Convergence.txt','a') as f:
+        with open(output_folder+'Convergence.txt','a') as f:
             f.write(f'Generation {rep}\nConvergenve = {math.fabs(evaluation_values[:-1,0].mean()-average_performance)}\n')
             f.write(f'Convergence Percentage = {math.fabs(best_performance - average_performance)/best_performance}\n\n')
             #f.write(f'Convergence Percentage = {math.fabs(evaluation_values[:-1,0].mean()-average_performance)/best_performance}\n\n')
@@ -1318,7 +1301,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
         #Estimate non dominated fronts (Pareto fronts)
         fronts = pareto_frontiers(evaluation_values)
 
-        with open(output_folder + 'Evolutionary process/Pareto_fronts.txt','a') as pfronts:
+        with open(output_folder+'Pareto_fronts.txt','a') as pfronts:
             pfronts.write(f'Generation: {rep}\n')
             for i in np.sort(np.unique(fronts)):
                 pfronts.write(f'Pareto {i}: {np.argwhere(fronts==i).squeeze()}\n')
@@ -1326,7 +1309,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
         #print(fronts)
         Pareto_time_stop = time.time()
-        with open(output_folder + 'Evolutionary process/timing.txt','a') as time_file:
+        with open(output_folder+'timing.txt','a') as time_file:
             time_file.write(f'Generation: {rep}\nPareto frontier operation took: {Pareto_time_stop-Pareto_time_start}\n')
 
         pareto_distance_time_start = time.time()
@@ -1351,7 +1334,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
             evaluation_values[-1,i] = (np.multiply(evaluation_values[:-1,i],goal_significances.T).sum())/n_eval_values
 
         pareto_distance_time_stop = time.time()
-        with open(output_folder + 'Evolutionary process/timing.txt','a') as time_file:
+        with open(output_folder+'timing.txt','a') as time_file:
             time_file.write(f'Calculating the similarities of Niches / pareto frontiers (m) took: {pareto_distance_time_stop - pareto_distance_time_start}\n')
             time_file.write(f'# of fronts:{list(set(fronts))}\n')
 
@@ -1362,7 +1345,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
         # Keep the parameter values and the Activated genes of the 'Best'/0-th individual in a file
         on_genes_indx = np.arange(individuals[best_indiv_pos,parameters:].shape[0])[individuals[best_indiv_pos,parameters:]>0.5]
-        with open(output_folder + "Evolutionary process/best_solutions_active_genes.txt",'a') as best_solutions_fid:
+        with open(output_folder+"best_solutions_active_genes.txt",'a') as best_solutions_fid:
             best_solutions_fid.write('Generation: '+str(rep)+'\n')
             best_solutions_fid.write(str(individuals[best_indiv_pos,np.append(np.arange(parameters),parameters+on_genes_indx)])+"\n")
             best_solutions_fid.write('Active Features: '+str(on_genes_indx)+'\n\n')
@@ -1370,7 +1353,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
         # Keep the parameter values and all the non-zero genes of the 'Best'/0-th individual in a file
         on_genes_indx = np.arange(individuals[best_indiv_pos,parameters:].shape[0])[individuals[best_indiv_pos,parameters:]>0]
-        with open(output_folder + "Evolutionary process/best_solutions_all_nonzero_genes.txt",'a') as best_solutions_all_fid:
+        with open(output_folder+"best_solutions_all_nonzero_genes.txt",'a') as best_solutions_all_fid:
             best_solutions_all_fid.write('Generation: '+str(rep)+'\n')
             best_solutions_all_fid.write(str(individuals[best_indiv_pos,np.append(np.arange(parameters),parameters+on_genes_indx)])+"\n")
             best_solutions_all_fid.write('All non-zero Features: '+str(on_genes_indx)+'\n\n')
@@ -1391,7 +1374,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
                 sum_change[i-1] = (evaluation_values[-1,i-1]/float(sum_ranked_eval_per_generation[rep])) #17/11/2020
 
 
-        with open(output_folder + 'Evolutionary process/Roulette_change.txt','a') as roulette:
+        with open(output_folder+'Roulette_change.txt','a') as roulette:
             roulette.write(f'Generation {rep}\n{sum_change}\n')
 
 
@@ -1402,13 +1385,13 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
             selected_individuals[i+1] = individuals[sel_indx[i]]
 
         # Save the selected indices in a file
-        with open(output_folder + 'Evolutionary process/selected_indiv_index.txt','a') as Sel_ind:
+        with open(output_folder+'selected_indiv_index.txt','a') as Sel_ind:
             Sel_ind.write(f'Generation {rep}\nIndividual indices selected: {str(sel_indx)}\n-------\n')
 
 
 
         preparation_for_crossover_time_stop = time.time()
-        with open(output_folder + 'Evolutionary process/timing.txt','a') as time_file:
+        with open(output_folder+'timing.txt','a') as time_file:
             time_file.write(f'Preparation_for_crossover_time = {preparation_for_crossover_time_stop - preparation_for_crossover_time_start}\n')
 
 
@@ -1438,7 +1421,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
                 cross_point1=int(cross_point1)
                 cross_point2=int(cross_point2)
 
-                with open(output_folder + 'Evolutionary process/Mutation_points.txt', 'a') as tf:
+                with open(output_folder+'Mutation_points.txt', 'a') as tf:
                     tf.write(f'Indiv_{i}, Indiv_{i+1} --> cross_point1: {cross_point1}, cross_point2: {cross_point2}, width: {width}'+'\n')
 
 
@@ -1455,23 +1438,23 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
 
                 selected_individuals[i] = child1
                 selected_individuals[i+1] = child2
-                with open(output_folder + 'Evolutionary process/Arithmetic_Mutations.txt', 'a') as tf:
+                with open(output_folder+'Arithmetic_Mutations.txt', 'a') as tf:
                     tf.write(f"Generation: {rep}:\n Indiv_{i}, Indiv_{i+1} --> alpha = {alpha} => CH1 = alpha*A + (1-alpha)*B , CH2 = (1-alpha)*A + alpha*B"+'\n')
 
         cross_over_time_stop = time.time()
-        with open(output_folder + 'Evolutionary process/timing.txt','a') as time_file:
+        with open(output_folder+'timing.txt','a') as time_file:
             time_file.write(f'Cross over time = {cross_over_time_stop - cross_over_time_start}\n')
 
 
         # Αpply mutation operator
         mutation_time_start = time.time()
-        with open(output_folder + 'Evolutionary process/Mutation_points.txt', 'a') as tf:
+        with open(output_folder+'Mutation_points.txt', 'a') as tf:
             tf.write(f'Generation: {rep}'+'\n')
 
         sele_indivs = mutation(selected_individuals, population, min_values, max_values, mutation_probability, generations, rep, mu=0, s=0.1)
 
         mutation_time_stop = time.time()
-        with open(output_folder + 'Evolutionary process/timing.txt','a') as time_file:
+        with open(output_folder+'timing.txt','a') as time_file:
             time_file.write(f'Mutation took = {mutation_time_stop - mutation_time_start}\n')
 
 
@@ -1484,7 +1467,7 @@ def apply_evolutionary_process(generations, population, max_values, min_values, 
         else:
             if verbose: print(f'Individual_{best_indiv_pos} is the New best solution')
 
-    with open (output_folder + "Evolutionary process/best_solution.txt","a") as best_solution_fid:
+    with open (output_folder+"best_solution.txt","a") as best_solution_fid:
         for gene in range(individuals.shape[1]):
             if gene < len(individuals[0])-1:
                 best_solution_fid.write(str(individuals[0,gene])+"\t")
@@ -1526,7 +1509,7 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
     -----------
     '''
     if verbose: print(f"Number of parameters = {parameters}")
-    #original_dataset = dataset.copy() # Keep a acopy of the data just in case!
+    original_dataset = dataset.copy() # Keep a acopy of the data just in case!
     unique_labels = list(set(labels)) # or use np.unique(labels) <-- <numpy.ndarray>
     labels, unique_labels = transform_labels_to_numeric(labels,unique_labels)
     unique_labels = np.sort(unique_labels, axis=None)
@@ -1550,9 +1533,8 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 
     # Normalize data in scale [0,1]
     if normalize_flag:
-        #dataset_normalized = normalize_dataset(dataset)
-        #dataset = dataset_normalized.copy()
-        dataset = normalize_dataset(dataset)
+        dataset_normalized = normalize_dataset(dataset)
+        dataset = dataset_normalized.copy()
 
     classification_problems = create_different_classification_problems(labels, unique_labels)
 
@@ -1640,55 +1622,44 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
 
 
     individuals = apply_evolutionary_process(generations, population, max_values, min_values, two_points_crossover_probability,
-                                             arithmetic_crossover_probability, mutation_probability,dataset,
-                                             labels, individuals, goal_significances, num_of_folds, classification_problems,
-                                             output_folder, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes, eval_names, multiclass, verbose, to_plot)
+                                            arithmetic_crossover_probability, mutation_probability,dataset,
+                                            labels, individuals, goal_significances, num_of_folds, classification_problems,
+                                            output_folder, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes, eval_names, multiclass, verbose, to_plot)
 
-    evaluation_values, mean_std_list, roc_auc_list, N_trees = evaluate_individuals(dataset, labels, individuals, goal_significances, num_of_folds,
-                                                                                   classification_problems, output_folder, JMI_genes, Wilcoxon_genes,
-                                                                                   mRMR_genes, SelKBest_genes, multiclass, verbose)
+
+    evaluation_values,mean_std_list, roc_auc_list, N_trees = evaluate_individuals(dataset, labels, individuals, goal_significances, num_of_folds,
+                                            classification_problems, output_folder, JMI_genes, Wilcoxon_genes,
+                                            mRMR_genes, SelKBest_genes, multiclass, verbose)
     evaluation_values = np.array(evaluation_values, dtype = float)
 
-    #average_performance = np.mean(evaluation_values[-1])
+    average_performance = np.mean(evaluation_values[-1])
     fronts = pareto_frontiers(evaluation_values)
 
-    with open(output_folder + 'Evolutionary process/Pareto_fronts.txt','a') as pfronts:
+    with open(output_folder+'Pareto_fronts.txt','a') as pfronts:
         pfronts.write('\nLast Pareto:\n')
         for i in np.sort(np.unique(fronts)):
             pfronts.write(f'Pareto {i}: {np.argwhere(fronts==i).squeeze()}\n')
         pfronts.write('\n')
-    
-    # Write the same inforation in a file just for the last Pareto
-    with open(output_folder + 'Pareto_fronts.txt','a') as pfronts:
-        pfronts.write('Last Pareto:\n')
-        for i in np.sort(np.unique(fronts)):
-            pfronts.write(f'Pareto {i}: {np.argwhere(fronts==i).squeeze()}\n')
+
+    pareto1_indx = np.argwhere(fronts==1).squeeze()
+    if verbose: print(f'The indices of individuals in the 1st Pareto are: {pareto1_indx}')
+    np.savetxt(output_folder+'Final_solutions.txt', delimiter=',', X=individuals[pareto1_indx],fmt='%.5f')
+
+    filter_mask = filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes, verbose)
+    feature_matrix = np.tile(feature_names,(individuals.shape[0],1))
 
     #################################################################################
 
     # Save the first pareto frontiers in a file based on the evaluation scores
-    pareto1_indx = np.argwhere(fronts==1).squeeze()
     pareto1_maximums = np.argmax(evaluation_values[:,pareto1_indx],axis=1) # indices for the possition of the best score for each metric
     first_pareto_individuals = individuals[pareto1_indx].copy() #sub-matrix of the individuals in the first pareto front
     if not os.path.exists(output_folder+'Pareto_1_results/'):
-        os.makedirs(output_folder + 'Pareto_1_results/')
-        os.makedirs(output_folder + 'Pareto_1_results/Models/')
-        os.makedirs(output_folder + 'Pareto_1_results/Features/')
-        os.makedirs(output_folder + 'Pareto_1_results/Overview/')
-        os.makedirs(output_folder + 'Pareto_1_results/Raw_individual_solutions/')
-    
-    if verbose: print(f'The indices of individuals in the 1st Pareto are: {pareto1_indx}')
-    np.savetxt(output_folder+'Pareto_1_results/RAW_whole_Pareto_1_solutions.txt', delimiter=',', X=individuals[pareto1_indx],fmt='%.5f')
-
-    filter_mask = filter_function(individuals, JMI_genes, Wilcoxon_genes, mRMR_genes, SelKBest_genes, verbose)
-    #feature_matrix = np.tile(feature_names,(individuals.shape[0],1))
+        os.makedirs(output_folder+ 'Pareto_1_results/')
+        os.makedirs(output_folder+ 'Pareto_1_results/Models/')
 
     for i,eval_name in enumerate(eval_names):
-        np.savetxt(output_folder + f'Pareto_1_results/Raw_individual_solutions/{eval_name}.txt', delimiter=',', X=first_pareto_individuals[pareto1_maximums[i],:].reshape(1,-1), fmt='%.5f')
-
-        temp_df = pd.DataFrame(evaluation_values[:,pareto1_indx], index = eval_names, columns = np.arange(pareto1_indx.shape[0]))
-        temp_df.to_csv(output_folder + f'Pareto_1_results/Overview/Pareto1_metrics_ALL_{eval_name}.csv')
-        #np.savetxt(output_folder + f'Pareto_1_results/Overview/Pareto1_metrics_ALL_{eval_name}.csv', delimiter=',', X=temp_df, fmt='%.5f') #.reshape(1,-1)
+        np.savetxt(output_folder+f'Pareto_1_results/{eval_name}.txt', delimiter=',', X=first_pareto_individuals[pareto1_maximums[i],:].reshape(1,-1),fmt='%.5f')
+        np.savetxt(output_folder+f'Pareto1_metrics_ALL_{eval_name}.csv', delimiter=',', X=evaluation_values[:,pareto1_indx],fmt='%.5f') #.reshape(1,-1)
 
 
     print('\nTraining of the final models started\n')
@@ -1710,44 +1681,25 @@ def biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, m
     if verbose:
         print('Individual\'s 0 selected features:')
         print(np.asmatrix(last_features.squeeze()))
-    if not os.path.exists(output_folder + 'Biomarkers/'):
-        os.makedirs(output_folder + 'Biomarkers/')
-    
-    #np.savetxt(output_folder + 'Potential_Biomarkers.txt', last_features, delimiter=',', fmt='%s')
-    np.savetxt(output_folder + 'Biomarkers/Potential_Biomarkers.txt', last_features, delimiter=',', fmt='%s')
-    
+    np.savetxt(output_folder+'Potential_Biomarkers.txt', last_features, delimiter=',', fmt='%s')
 
     ## All Pareto front 1 features Union
     Pareto1_features_union = feature_names[np.argwhere(np.sum(first_pareto_individuals[pareto1_maximums,parameters:]>0.5,axis=0)>0).squeeze()]
     print('Union of selected features for the individuals in pareto front 1 with maximum evaluation values:')
     print(np.asmatrix(Pareto1_features_union.squeeze()))
-    np.savetxt(output_folder + 'Biomarkers/Potential_Biomarkers_Union.txt', Pareto1_features_union, delimiter=',', fmt='%s')
+    np.savetxt(output_folder+'Potential_Biomarkers_Union.txt', Pareto1_features_union, delimiter=',', fmt='%s')
 
     ## All Pareto front 1 features Intersection
     Pareto1_features_intersect = feature_names[np.argwhere(np.sum(first_pareto_individuals[pareto1_maximums,parameters:]>0.5,axis=0)==first_pareto_individuals.shape[0]).squeeze()]
     print('Intersection of selected features for the individuals in pareto front 1 with maximum evaluation values:')
     print(np.asmatrix(Pareto1_features_intersect.squeeze()))
-    np.savetxt(output_folder + 'Biomarkers/Potential_Biomarkers_Intersection.txt', Pareto1_features_intersect, delimiter=',', fmt='%s')
-
-    print(eval_names)
-    print(first_pareto_individuals[pareto1_maximums,:].shape)
-    for i_ev, metric_output in enumerate(eval_names):
-        f_names = feature_names[first_pareto_individuals[pareto1_maximums[i_ev],parameters:]>0.5]
-        
-        if verbose:
-            print(metric_output)
-            print(f_names)
-        
-        objective = metric_output
-        objective = objective.replace(' ',"_").replace('#', '_').replace("__", "_")
-        np.savetxt(output_folder + f'Pareto_1_results/Features/{objective}.txt', f_names, delimiter=',', fmt='%s')
-
+    np.savetxt(output_folder+'Potential_Biomarkers_Intersection.txt', Pareto1_features_intersect, delimiter=',', fmt='%s')
 
 
     end_time = time.time()-prog_time
     msg = f'Program ended in : {end_time:.4} seconds or {end_time/60:.4} minutes\n'
     print(msg)
-    with open(output_folder + 'Evolutionary process/timing.txt','a') as time_file:
+    with open(output_folder+'timing.txt','a') as time_file:
         time_file.write(msg)
 
     ##################################### Saving the variables #####################################
@@ -1883,7 +1835,6 @@ if __name__ == "__main__":
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-        os.makedirs(output_folder + 'Evolutionary process')
 
     with open(output_folder+'Inputs.txt','a') as param_file:
         param_file.write(f'cwd: {current_dir}\ndataset file: {dataset_filename}\n')
@@ -1894,7 +1845,6 @@ if __name__ == "__main__":
     eval_names = np.array(['Model_complexity #features','Accuracy','Model_complexity #splits',
                                 'weighted Geometric Mean','F1 score','F2 score','Precision','Recall','AUrocC',
                                 'Balanced_accuracy','Manhattan distance^-1','Overall_score'])
-    
 
     biomarker_discovery_modeller(dataset, feature_names, sample_names, labels, min_values, max_values, population,
                                 generations, two_points_crossover_probability, arithmetic_crossover_probability,
