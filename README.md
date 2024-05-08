@@ -11,7 +11,7 @@ Benchmarked on 2 datasets. One omics and one clinical. With MEvA-X the performan
  <table>
   <tr>
     <th>Python version</th>
-    <th>3.9</th>
+    <th> >=3.9.x - <= 3.11.x </th>
     <th>https://www.python.org/</th>
   </tr>
   </table>
