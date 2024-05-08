@@ -156,3 +156,83 @@ python MEvA-X_V1.0.0.py
 python MEvA-X_V1.0.0_opera.py
 ```
 
+<h4>Calling the script with custom parameters</h4>
+<table>
+ <tr>
+   <td><b>Parameter symbol</b></td>
+   <td><b>Explanation</b></td>
+ </tr>
+ <tr>
+   <td>--dataset_path or -A</td>
+   <td>Data path and filename. The expected format is: FeaturesXSamples</td>
+ </tr>
+ <tr>
+   <td>--labels_path", -B</td>
+   <td>Labels path and filename. The expected format is an unnamed list</td>
+ </tr>
+ <tr>
+   <td>--FS_dir</td>
+   <td>The path where the precalculated Feature selections are stored for JMI,MRMR,SelectKBest,Wilcoxon rank sum. Default = None </td>
+ </tr>
+ <tr>
+   <td>--output_dir</td>
+   <td>The pathe where to save the results. If None is given, the default is "./Results" in the current working directory </td>
+ </tr>
+ <tr>
+   <td>--K, -k</td>
+   <td>Number of Folds for the Stratified K-fold of the Machine Learning algorithm validation. Default = 10</td>
+ </tr>
+ <tr>
+   <td>--P, -p</td>
+   <td>The population of the Genetic algorithm. Default = 50</td>
+ </tr>
+ <tr>
+   <td>--G, -g</td>
+   <td>The number of generations/iterations of the Genetic algorithm. Default = 100</td>
+ </tr>
+ <tr>
+   <td>--crossover_perc</td>
+   <td>Probability of a two-point crossover for the creation of a new offsping. Default = 0.9 (90%)</td>
+ </tr>
+<tr>
+   <td>--arithmetic_perc</td>
+   <td>Probability of an arithmetic crossover for the creation of a new offsping. Default = 0.0 (0%) deactivated</td>
+ </tr>
+ <tr>
+   <td>--mutation_perc</td>
+   <td>The probability of point mutations to occure in the genome of an offspring. Default = 0.05 (5%).</td>
+ </tr>
+ <tr>
+   <td>--goal_sig_path, -gsp</td>
+   <td>The path to the file containing the weights of the evaluation metrics</td>
+ </tr>
+ <tr>
+   <td>--goal_sig_list, -gsl</td>
+   <td>The array of the weights for the evaluation metrics. Default = [0.8, 0.8, 0.8, 2, 1, 1, 1, 1, 2, 0.5, 2]</td>
+ </tr>
+ <tr>
+   <td>--impute</td>
+   <td>Boolean selector for the imputation of missing values with a KNN imputer. Default = True</td>
+ </tr>
+ <tr>
+   <td>--normalize</td>
+   <td>Boolean selector for the normalization of the data. Default = True</td>
+ </tr>
+ <tr>
+   <td>--verbose, -V</td>
+   <td>Boolean selector for the output messages during the script execution. Default = False (quiet)</td>
+ </tr>
+ <tr>
+   <td>--plot, -plt</td>
+   <td>Boolean selector for saving some plots of the trained models. Default = False</td>
+  </tr>
+  <tr>
+   <td>--cores, -c</td>
+   <td>Selector of the CPU cores to use while running the algorithm. Default = 1</td>
+  </tr>
+  <tr>
+   <td>--mi_k, -m</td>
+   <td>K parameter for the K-NN to use while calculating the Mutual Information for the feature selection. Applicable when there are no precalculatedvalues. Default = 5</td>
+  </tr>
+ 
+</table>
